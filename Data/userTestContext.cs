@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace UserTest.Models;
+namespace UserTestSpace.Models;
 
 public class UserTestContext : DbContext
 {
@@ -9,5 +9,5 @@ public class UserTestContext : DbContext
     {
     }
 
-    public DbSet<UserTestContext> userTests { get; set; } = null!;
+    public DbSet<UserTest> UserTests { get; set; } = null!;
 }
