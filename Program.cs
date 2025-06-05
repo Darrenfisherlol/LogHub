@@ -1,8 +1,6 @@
+using LogHubStart.Data;
 using Microsoft.EntityFrameworkCore;
-using UserTestSpace.Models;
-
-
-
+using LogHubStart.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +12,10 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<UserTestContext>(opt =>
     opt.UseInMemoryDatabase("User"));
+
+builder.Services.AddDbContext<AppDbContext>(opt =>
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultLocalConnection")));
+
 
 
 var app = builder.Build();

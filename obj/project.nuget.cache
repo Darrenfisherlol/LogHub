@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "HdGZMAyVN5I=",
+  "dgSpecHash": "gp1sj3FlFug=",
   "success": true,
   "projectFilePath": "I:\\Coding\\Projects\\LogHub\\LogHubStart\\LogHubStart.csproj",
   "expectedPackageFiles": [
@@ -134,6 +134,8 @@
     "C:\\Users\\darre\\.nuget\\packages\\njsonschema.annotations\\11.3.2\\njsonschema.annotations.11.3.2.nupkg.sha512",
     "C:\\Users\\darre\\.nuget\\packages\\njsonschema.newtonsoftjson\\11.3.2\\njsonschema.newtonsoftjson.11.3.2.nupkg.sha512",
     "C:\\Users\\darre\\.nuget\\packages\\njsonschema.yaml\\11.3.2\\njsonschema.yaml.11.3.2.nupkg.sha512",
+    "C:\\Users\\darre\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512",
+    "C:\\Users\\darre\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.4\\npgsql.entityframeworkcore.postgresql.9.0.4.nupkg.sha512",
     "C:\\Users\\darre\\.nuget\\packages\\nswag.annotations\\14.4.0\\nswag.annotations.14.4.0.nupkg.sha512",
     "C:\\Users\\darre\\.nuget\\packages\\nswag.aspnetcore\\14.4.0\\nswag.aspnetcore.14.4.0.nupkg.sha512",
     "C:\\Users\\darre\\.nuget\\packages\\nswag.core\\14.4.0\\nswag.core.14.4.0.nupkg.sha512",

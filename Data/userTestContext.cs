@@ -1,6 +1,7 @@
+using LogHubStart.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace UserTestSpace.Models;
+namespace LogHubStart.Data;
 
 public class UserTestContext : DbContext
 {
