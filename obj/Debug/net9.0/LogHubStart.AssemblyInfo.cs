@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LogHubStart")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15337247232a5b4e1e5720daca02e62bb6bc30c2")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+428a48c9c000d81272e6f56995ba619cbdfc60de")]
 [assembly: System.Reflection.AssemblyProductAttribute("LogHubStart")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LogHubStart")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

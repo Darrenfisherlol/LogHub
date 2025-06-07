@@ -23,14 +23,11 @@ public class AppDbContext : DbContext
 
     }
     
-    /// <summary>
-    /// We use set bc
-    ///  - DbSet<T> is not initialized, the compiler will emit warnings from them bc
-    ///    the nullable reference type feature is enabled by default
-    /// </summary>
     
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<WarehouseSection> WarehouseSections => Set<WarehouseSection>();
+    public DbSet<SectionType> SectionTypes => Set<SectionType>();
+    
     public DbSet<Island> Islands => Set<Island>();
     public DbSet<IslandPosition> IslandPositions => Set<IslandPosition>();
     
@@ -45,12 +42,18 @@ public class AppDbContext : DbContext
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Employee> Employees => Set<Employee>();
     public DbSet<Customer> Customers => Set<Customer>();
-    
-    
-    // or we can use this but a warning will show if not implemented
-    // public DbSet<Warehouse> Warehouses { get; set; }
+    public DbSet<Supplier> Suppliers => Set<Supplier>();
 
+    public DbSet<InventoryMovement> InventoryMovements => Set<InventoryMovement>();
+    public DbSet<ProductLocation> ProductLocations => Set<ProductLocation>();
+    public DbSet<ItemStock> ItemStocks => Set<ItemStock>();
 
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderProduct> OrderProducts => Set<OrderProduct>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    
 }
 
 
