@@ -23,7 +23,53 @@ public class AppDbContext : DbContext
 
     }
     
+    /// <summary>
+    /// Create all entity relationships
+    /// </summary>
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<Warehouse>()
+            .HasMany(w => w.WarehouseSections)
+            .WithOne(s => s.Warehouse)
+            .HasForeignKey(s => s.WarehouseId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        // Warehouse -> WarehouseSection
+        modelBuilder.Entity<WarehouseSection>()
+            .HasMany(w => w.Islands)
+            .WithOne(i => i.WarehouseSection)
+            .HasForeignKey(i => i.IslandId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        // WarehouseSection -> Islands
+        modelBuilder.Entity<WarehouseSection>()
+            .HasMany(w => w.Islands)
+            .WithOne(i => i.WarehouseSection)
+            .HasForeignKey(i => i.WarehouseSectionsId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // WarehouseSection -> Bins
+        modelBuilder.Entity<WarehouseSection>()
+            .HasMany(w => w.BinStorages)
+            .WithOne(b => b.WarehouseSection)
+            .HasForeignKey(b => b.WarehouseSectionsId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // WarehouseSection -> StraighLine
+        modelBuilder.Entity<WarehouseSection>()
+            .HasMany(w => w.StraightLines)
+            .WithOne(b => b.WarehouseSection)
+            .HasForeignKey(b => b.WarehouseSectionId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+    }
     
+    
+    /// <summary>
+    /// Showcase all models we will use
+    /// </summary>
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<WarehouseSection> WarehouseSections => Set<WarehouseSection>();
     public DbSet<SectionType> SectionTypes => Set<SectionType>();
@@ -53,6 +99,7 @@ public class AppDbContext : DbContext
     public DbSet<OrderProduct> OrderProducts => Set<OrderProduct>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    
     
 }
 
