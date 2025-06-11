@@ -6,7 +6,6 @@ namespace LogHubStart.Models;
 
 public class Warehouse
 {
-    [Key]
     [Required]
     public int WarehouseId { get; set; }
     

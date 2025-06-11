@@ -7,7 +7,6 @@ namespace LogHubStart.Models;
 public class BinStorage
 {
     [Key]
-    [Required]
     public int BinStorageId { get; set; }
     
     [ForeignKey("WarehouseSection")]

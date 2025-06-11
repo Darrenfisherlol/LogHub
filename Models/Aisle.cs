@@ -9,7 +9,6 @@ namespace LogHubStart.Models;
 public class Aisle
 {
     [Key]
-    [Required]
     public int AisleId { get; set; }
     
     [ForeignKey("StraightLine")]

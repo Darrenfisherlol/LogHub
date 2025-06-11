@@ -7,7 +7,6 @@ namespace LogHubStart.Models;
 
 public class WarehouseSection
 {
-    [Key]
     [Required]
     public int WarehouseSectionId { get; set; }
     

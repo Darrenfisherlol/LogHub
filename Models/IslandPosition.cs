@@ -6,7 +6,7 @@ namespace LogHubStart.Models;
 
 public class IslandPosition
 {
-    [Key]
+    
     [Required]
     public int IslandPositionId { get; set; }
     

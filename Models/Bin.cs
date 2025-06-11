@@ -9,7 +9,6 @@ namespace LogHubStart.Models;
 public class Bin
 {
     [Key]
-    [Required]
     public int BinId { get; set; }
     
     [ForeignKey("BinStorage")]

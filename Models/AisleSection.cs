@@ -8,7 +8,6 @@ namespace LogHubStart.Models;
 public class AisleSection
 {
     [Key]
-    [Required]
     public int AisleSectionId { get; set; }
     
     [ForeignKey("Aisle")]

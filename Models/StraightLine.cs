@@ -6,10 +6,8 @@ namespace LogHubStart.Models;
 
 public class StraightLine
 {
-    [Key]
     [Required]
     public int StraightLineID { get; set; }
-    
     
     [ForeignKey("WarehouseSections")]
     [Required]

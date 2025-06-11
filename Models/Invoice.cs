@@ -1,13 +1,27 @@
-﻿namespace LogHubStart.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace LogHubStart.Models;
 
 public class Invoice
 {
+    [Key]
     public int InvoiceId { get; set; }
-    public int CustomerId { get; set; }
-    public int SupplierId { get; set; }
-    public DateTimeOffset Date { get; set; }
-    public double Amount { get; set; }
-    public double Tax { get; set; }
-    public double TotalAmount { get; set; }
     
+    [ForeignKey("Customer")]
+    public int? CustomerId { get; set; }
+    public Customer? Customer { get; set; }
+    
+    [ForeignKey("Supplier")]
+    public int? SupplierId { get; set; }
+    public Supplier? Supplier { get; set; }
+    
+    public DateTimeOffset Date { get; set; }
+    
+    public decimal Amount { get; set; }
+    public decimal Tax { get; set; }
+    
+    // implies 1 to 1 relationship ~ 1 invoice 1 order
+    public Order Orders { get; set; }
+
 }

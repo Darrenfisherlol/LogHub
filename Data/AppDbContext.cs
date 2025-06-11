@@ -30,17 +30,11 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
+        // warehosue -> warehouseSection
         modelBuilder.Entity<Warehouse>()
             .HasMany(w => w.WarehouseSections)
             .WithOne(s => s.Warehouse)
             .HasForeignKey(s => s.WarehouseId)
-            .OnDelete(DeleteBehavior.Cascade);
-        
-        // Warehouse -> WarehouseSection
-        modelBuilder.Entity<WarehouseSection>()
-            .HasMany(w => w.Islands)
-            .WithOne(i => i.WarehouseSection)
-            .HasForeignKey(i => i.IslandId)
             .OnDelete(DeleteBehavior.Cascade);
         
         // WarehouseSection -> Islands
@@ -64,6 +58,40 @@ public class AppDbContext : DbContext
             .HasForeignKey(b => b.WarehouseSectionId)
             .OnDelete(DeleteBehavior.Cascade);
         
+        
+        
+        
+        
+        
+        
+        // Inventory Movements
+        modelBuilder.Entity<InventoryMovement>(entity =>
+        {
+            entity.HasOne(m => m.Product)
+                .WithMany()
+                .HasForeignKey(m => m.ProductId)
+                .OnDelete(DeleteBehavior.Restrict); 
+            
+            entity.HasOne(m => m.FromProductLocation)
+                .WithMany()
+                .HasForeignKey(m => m.FromProductLocationId)
+                .OnDelete(DeleteBehavior.Restrict); 
+
+            entity.HasOne(m => m.ToProductLocation)
+                .WithMany() 
+                .HasForeignKey(m => m.ToProductLocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(m => m.MovementByEmployee)
+                .WithMany() 
+                .HasForeignKey(m => m.MovementByEmployeeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            entity.HasOne(m => m.OrderProduct)
+                .WithMany() 
+                .HasForeignKey(m => m.OrderProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
     
     
@@ -72,7 +100,7 @@ public class AppDbContext : DbContext
     /// </summary>
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<WarehouseSection> WarehouseSections => Set<WarehouseSection>();
-    public DbSet<SectionType> SectionTypes => Set<SectionType>();
+    // public DbSet<SectionType> SectionTypes => Set<SectionType>();
     
     public DbSet<Island> Islands => Set<Island>();
     public DbSet<IslandPosition> IslandPositions => Set<IslandPosition>();
