@@ -24,4 +24,11 @@
     <PackageReference Include="NSwag.AspNetCore" Version="14.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Feature\Order\" />
+    <Folder Include="Feature\Product\" />
+    <Folder Include="Feature\User\" />
+    <Folder Include="Feature\Warehouse\" />
+  </ItemGroup>
+
 </Project>
