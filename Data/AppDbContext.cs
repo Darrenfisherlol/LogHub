@@ -72,12 +72,12 @@ public class AppDbContext : DbContext
                 .HasForeignKey(m => m.ProductId)
                 .OnDelete(DeleteBehavior.Restrict); 
             
-            entity.HasOne(m => m.FromProductLocation)
+            entity.HasOne(m => m.FromItemLocation)
                 .WithMany()
                 .HasForeignKey(m => m.FromProductLocationId)
                 .OnDelete(DeleteBehavior.Restrict); 
 
-            entity.HasOne(m => m.ToProductLocation)
+            entity.HasOne(m => m.ToItemLocation)
                 .WithMany() 
                 .HasForeignKey(m => m.ToProductLocationId)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -119,8 +119,8 @@ public class AppDbContext : DbContext
     public DbSet<Supplier> Suppliers => Set<Supplier>();
 
     public DbSet<InventoryMovement> InventoryMovements => Set<InventoryMovement>();
-    public DbSet<ProductLocation> ProductLocations => Set<ProductLocation>();
-    public DbSet<ItemStock> ItemStocks => Set<ItemStock>();
+    public DbSet<ItemLocation> ProductLocations => Set<ItemLocation>();
+    public DbSet<Item> ItemStocks => Set<Item>();
 
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<Order> Orders => Set<Order>();

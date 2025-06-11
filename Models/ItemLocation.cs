@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogHubStart.Models;
 
-public class ProductLocation
+public class ItemLocation
 {
     [Key]
-    public int ProductLocationId { get; set; }
+    public int itemLocationId { get; set; }
     
     [ForeignKey("IslandPosition")]
     public int IslandPositionId { get; set; }
@@ -20,6 +20,6 @@ public class ProductLocation
     public int PositionId { get; set; }
     public AisleSectionPosition AisleSectionPosition { get; set; }
     
-    public ICollection<ItemStock> ItemStocks { get; set; } = new List<ItemStock>();
+    public ICollection<Item> Items { get; set; } = new List<Item>();
 
 }

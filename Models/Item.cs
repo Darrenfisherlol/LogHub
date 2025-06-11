@@ -3,14 +3,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogHubStart.Models;
 
-public class ItemStock
+public class Item
 {
     [Key]
-    public int ItemStockId { get; set; }
+    public int ItemId { get; set; }
     
     [ForeignKey("ProductLocation")]
     public int ProductLocationId { get; set; }
-    public ProductLocation ProductLocation { get; set; }
+    public ItemLocation ItemLocation { get; set; }
     
     [ForeignKey("Product")]
     [Required]

@@ -21,5 +21,5 @@ public class Product
     public decimal Price { get; set; }
     
     public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
-    public ICollection<ItemStock> ItemStocks { get; set; } = new List<ItemStock>(); 
+    public ICollection<Item> ItemStocks { get; set; } = new List<Item>(); 
 }

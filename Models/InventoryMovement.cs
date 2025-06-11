@@ -4,35 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LogHubStart.Models;
 
-/*public class InventoryMovement
-{
-    [Key]
-    public int InventoryMovementId { get; set; }
-
-    // the item 
-    [Required]
-    public int ItemStockId { get; set; }
-    public ItemStock ItemStock { get; set; }
-    
-    // location of goods
-    [Required]    
-    public int ToOrderProductId { get; set; }
-    public OrderProduct ToOrderProduct { get; set; }
-    
-    [Required]    
-    public int FromProductLocationId { get; set; }
-    public OrderProduct FromOrderProduct { get; set; }
-
-    [Required]    
-    public int ToProductLocationId { get; set; }
-    public ProductLocation ProductLocation { get; set; }
-    
-    public int QuantityChange { get; set; }
-    
-    public DateTimeOffset MovementDate { get; set; }
-    public int MovementBy { get; set; }
-}*/
-
 
 public class InventoryMovement
 {
@@ -40,17 +11,19 @@ public class InventoryMovement
     public int InventoryMovementId { get; set; }
 
     [Required]
-    public int ProductId { get; set; } 
-    public Product Product { get; set; }
+    public int ItemId { get; set; } 
+    public Item Item { get; set; }
 
     [Required]
     public int FromProductLocationId { get; set; } 
-    public ProductLocation FromProductLocation { get; set; }
+    public ItemLocation FromItemLocation { get; set; }
 
     [Required]
     public int ToProductLocationId { get; set; } 
-    public ProductLocation ToProductLocation { get; set; }
+    public ItemLocation ToItemLocation { get; set; }
 
+    public string Status { get; set; }
+    
     [Required]
     public int QuantityChange { get; set; }
 
