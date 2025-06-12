@@ -21,4 +21,7 @@ public class Employee
     [Required]
     public DateTimeOffset CreatedDate { get; set; }
 
+    public ICollection<Order> Orders { get; set; }
+
+
 }
