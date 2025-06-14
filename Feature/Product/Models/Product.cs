@@ -20,6 +20,6 @@ public class Product
     [Required]
     public decimal Price { get; set; }
     
-    public ICollection<OrderProduct> OrderProducts { get; set; } = new List<OrderProduct>();
-    public ICollection<Item> ItemStocks { get; set; } = new List<Item>(); 
+    public ICollection<OrderProduct> OrderProducts { get; set; }
+    public ICollection<Item> ItemStocks { get; set; }
 }

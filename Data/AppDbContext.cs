@@ -30,68 +30,43 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        // warehosue -> warehouseSection
-        modelBuilder.Entity<Warehouse>()
-            .HasMany(w => w.WarehouseSections)
-            .WithOne(s => s.Warehouse)
-            .HasForeignKey(s => s.WarehouseId)
-            .OnDelete(DeleteBehavior.Cascade);
-        
-        // WarehouseSection -> Islands
-        modelBuilder.Entity<WarehouseSection>()
-            .HasMany(w => w.Islands)
-            .WithOne(i => i.WarehouseSection)
-            .HasForeignKey(i => i.WarehouseSectionsId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // WarehouseSection -> Bins
-        modelBuilder.Entity<WarehouseSection>()
-            .HasMany(w => w.BinStorages)
-            .WithOne(b => b.WarehouseSection)
-            .HasForeignKey(b => b.WarehouseSectionsId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        // WarehouseSection -> StraighLine
-        modelBuilder.Entity<WarehouseSection>()
-            .HasMany(w => w.StraightLines)
-            .WithOne(b => b.WarehouseSection)
-            .HasForeignKey(b => b.WarehouseSectionId)
-            .OnDelete(DeleteBehavior.Cascade);
-        
-        
-        
-        
-        
-        
-        
-        // Inventory Movements
-        modelBuilder.Entity<InventoryMovement>(entity =>
-        {
-            entity.HasOne(m => m.Product)
-                .WithMany()
-                .HasForeignKey(m => m.ProductId)
-                .OnDelete(DeleteBehavior.Restrict); 
+        modelBuilder.Entity<Item>()
+            .HasOne(i => i.ItemLocation)
+            .WithMany(sl => sl.Items) 
+            .HasForeignKey(i => i.ItemLocationId)
+            .OnDelete(DeleteBehavior.Restrict);
             
-            entity.HasOne(m => m.FromItemLocation)
-                .WithMany()
-                .HasForeignKey(m => m.FromProductLocationId)
-                .OnDelete(DeleteBehavior.Restrict); 
+        modelBuilder.Entity<OrderProduct>()
+            .HasKey(op => new { op.OrderId, op.ProductId });
 
-            entity.HasOne(m => m.ToItemLocation)
-                .WithMany() 
-                .HasForeignKey(m => m.ToProductLocationId)
-                .OnDelete(DeleteBehavior.Restrict);
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne(op => op.Order)
+            .WithMany(o => o.OrderProducts)
+            .HasForeignKey(op => op.OrderId);
 
-            entity.HasOne(m => m.MovementByEmployee)
-                .WithMany() 
-                .HasForeignKey(m => m.MovementByEmployeeId)
-                .OnDelete(DeleteBehavior.Restrict);
-            
-            entity.HasOne(m => m.OrderProduct)
-                .WithMany() 
-                .HasForeignKey(m => m.OrderProductId)
-                .OnDelete(DeleteBehavior.Restrict);
-        });
+        modelBuilder.Entity<OrderProduct>()
+            .HasOne(op => op.Product)
+            .WithMany(p => p.OrderProducts)
+            .HasForeignKey(op => op.ProductId);
+
+        modelBuilder.Entity<InventoryMovement>()
+            .HasOne(m => m.ToItemLocation) 
+            .WithMany() 
+            .HasForeignKey(m => m.ToProductLocationId) 
+            .OnDelete(DeleteBehavior.Restrict); 
+
+        modelBuilder.Entity<InventoryMovement>()
+            .HasOne(m => m.FromItemLocation) 
+            .WithMany()
+            .HasForeignKey(m => m.FromProductLocationId) 
+            .OnDelete(DeleteBehavior.Restrict); 
+
+        modelBuilder.Entity<InventoryMovement>()
+            .HasOne(m => m.Order)
+            .WithMany()
+            .HasForeignKey(m => m.OrderId)
+            .OnDelete(DeleteBehavior.SetNull); 
+
     }
     
     
