@@ -1,5 +1,5 @@
 
-namespace LogHubStart.Models;
+namespace UserTest.Models;
 
 public class UserTest
 {

@@ -26,7 +26,7 @@ public class InventoryMovement
     public Order Order { get; set; }
 
     [Required]
-    public DateTimeOffset MovementDate { get; set; }
+    public DateTime MovementDate { get; set; }
 
     [Required]
     public int MovementByEmployeeId { get; set; } 

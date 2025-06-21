@@ -19,7 +19,7 @@ public class Employee
     [Required]
     public string Email { get; set; }
     [Required]
-    public DateTimeOffset CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; }
 
     public ICollection<Order> Orders { get; set; }
 

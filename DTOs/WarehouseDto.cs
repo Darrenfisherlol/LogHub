@@ -1,12 +1,12 @@
-
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using LogHubStart.Models;
 
-namespace LogHubStart.Models;
-
-public class Warehouse
+public class WarehouseDto
 {
-    [Required]
+     [Required]
     public int WarehouseId { get; set; }
     
     [Required, StringLength(250)]
@@ -37,16 +37,32 @@ public class Warehouse
     public string CreatedBy { get; set; }
     
     [Required]
-    [Column(TypeName = "datetimeoffset")]
-    public DateTimeOffset CreatedDate { get; set; }
+    [Column(TypeName = "DateTime")]
+    public DateTime CreatedDate { get; set; }
     
     [Required, StringLength(250)]
     public string UpdatedBy { get; set; }
     
     [Required]
-    [Column(TypeName = "datetimeoffset")]
-    public DateTimeOffset UpdateDate { get; set; }
+    [Column(TypeName = "DateTime")]
+    public DateTime UpdateDate { get; set; }
     
     public ICollection<WarehouseSection> WarehouseSections { get; set; }
 
+}
+
+public class CreateWarehouseDto
+{
+    [Required]
+    [MaxLength(100)]
+    public string Name { get; set; }
+    public string Location { get; set; }
+}
+
+public class UpdateWarehouseDto
+{
+    [Required]
+    [MaxLength(100)]
+    public string Name { get; set; }
+    public string Location { get; set; }
 }

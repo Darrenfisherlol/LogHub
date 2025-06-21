@@ -17,9 +17,9 @@ public class Order
     public Employee Employee { get; set; }
 
     [Required]
-    public DateTimeOffset StartDate { get; set; }
+    public DateTime StartDate { get; set; }
     [Required]
-    public DateTimeOffset EndDate { get; set; }
+    public DateTime EndDate { get; set; }
 
     public ICollection<OrderProduct> OrderProducts { get; set; }
     public ICollection<Item> FulfilledItems { get; set; }

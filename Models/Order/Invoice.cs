@@ -16,7 +16,7 @@ public class Invoice
     public int? SupplierId { get; set; }
     public Supplier? Supplier { get; set; }
     
-    public DateTimeOffset Date { get; set; }
+    public DateTime Date { get; set; }
     
     public decimal Amount { get; set; }
     public decimal Tax { get; set; }
