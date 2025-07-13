@@ -1,78 +1,112 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using LogHubStart.Data;
 using LogHubStart.Models;
-using LogHubStart.Repositories; 
+using Microsoft.EntityFrameworkCore;
 
-[Route("[controller]")]
+namespace LogHubStart.Controllers;
+
+[Route("api/[controller]")]
 [ApiController]
 public class WarehousesController : ControllerBase
 {
-    private readonly IWarehouseRepository _warehouseRepository;
+    private readonly AppDbContext _context;
 
-    public WarehousesController(IWarehouseRepository warehouseRepository)
+    public WarehousesController(AppDbContext context)
     {
-        _warehouseRepository = warehouseRepository;
+        _context = context;
     }
 
+    //
+    // RESTCRUD
+    //
+    
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Warehouse>>> GetWarehouses()
+    public async Task<IEnumerable<Warehouse>> GetWarehouses()
     {
-        var warehouses = await _warehouseRepository.GetAllWarehousesAsync();
-        return Ok(warehouses);
+        var warehouses = await _context.Warehouse.ToListAsync();
+        return warehouses;
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
     {
-        var warehouse = await _warehouseRepository.GetWarehouseByIdAsync(id);
+        var warehouse = await _context.Warehouse.FindAsync(id);
 
         if (warehouse == null)
         {
             return NotFound();
         }
 
-        return Ok(warehouse);
+        return warehouse;
     }
 
     [HttpPost]
-    public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse CreateWarehouse)
+    // overposting attacks
+    // dto
+    public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
     {
-        await _warehouseRepository.AddWarehouseAsync(CreateWarehouse);
-
-        return CreatedAtAction(nameof(GetWarehouse), new { id = CreateWarehouse.WarehouseId }, CreateWarehouse);
+        if (warehouse is null)
+        {
+            return BadRequest();
+        }
+        
+        _context.Add(warehouse);
+        await _context.SaveChangesAsync();
+        
+        return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId });
     }
 
     [HttpPut("{id}")]
+    // overposting attacks
+    // dto
     public async Task<IActionResult> PutWarehouse(int id, Warehouse updateWarehouse)
     {
         if (id != updateWarehouse.WarehouseId)
         {
             return BadRequest();
         }
-
-        var existingWarehouse = await _warehouseRepository.GetWarehouseByIdAsync(id);
-        if (existingWarehouse is null)
+        
+        _context.Entry(updateWarehouse).State = EntityState.Modified;
+        
+        try
         {
-            return NotFound();
+            await _context.SaveChangesAsync();
         }
-
-        // make sure works
-        await _warehouseRepository.UpdateWarehouseAsync(updateWarehouse);
-
-        return NoContent(); // 204 No Content for successful update - CONTENT UPDATED banner / popup
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!WarehouseExists(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWarehouse(int id)
     {
-        var warehouseExists = await _warehouseRepository.WarehouseExistsAsync(id);
+        var warehouseExists = WarehouseExists(id);
         if (!warehouseExists)
         {
             return NotFound();
         }
-
-        await _warehouseRepository.DeleteWarehouseAsync(id);
+        
+        var warehouse = await _context.Warehouse.FindAsync(id);
+        _context.Warehouse.Remove(warehouse);
+        await _context.SaveChangesAsync();
+        
         return NoContent();
+    }
+    
+    // Logic
+    public bool WarehouseExists(int id)
+    {
+        var doesWarehouseExist = _context.Warehouse
+            .Any(e => e.WarehouseId == id);
+        return doesWarehouseExist;
     }
 }

@@ -1,7 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
-using LogHubStart.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -10,77 +9,104 @@ namespace LogHubStart.Controllers;
 [ApiController]
 public class WarehouseSectionController : ControllerBase
 {
-    private readonly IWarehouseSectionRepository _WarehouseSectionRepository;
-    
-    public WarehouseSectionController(IWarehouseSectionRepository WarehouseSectionRepository)
+    private readonly AppDbContext _context;
+
+    public WarehouseSectionController(AppDbContext context)
     {
-        _WarehouseSectionRepository = WarehouseSectionRepository;
+        _context = context;
     }
+
+    //
+    // RESTCRUD
+    //
     
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<WarehouseSection>>> GetAllWarehouseSections()
+    public async Task<IEnumerable<WarehouseSection>> GetWarehouseSections()
     {
-        var sections = await _WarehouseSectionRepository.GetAllWarehouseSectionsAsync();
-        return Ok(sections);
+        var warehouseSections = await _context.WarehouseSection.ToListAsync();
+        return warehouseSections;
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<WarehouseSection>> GetWarehouseSection(int id)
     {
-
-        WarehouseSection warehouseSection = await _WarehouseSectionRepository.GetWarehouseSectionByIdAsync(id);
+        var warehouseSection = await _context.WarehouseSection.FindAsync(id);
 
         if (warehouseSection == null)
         {
             return NotFound();
         }
-        
+
         return warehouseSection;
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutWarehouseSection(int id, WarehouseSection warehouseSection)
-    {
-        if (id != warehouseSection.WarehouseSectionId)
-        {
-            return BadRequest();
-        }
-
-        if (!await _WarehouseSectionRepository.WarehouseSectionExistsAsync(id))
-        {
-            return NotFound();
-        }
-        
-        await _WarehouseSectionRepository.UpdateWarehouseSectionAsync(warehouseSection);
-        
-        return NoContent();
-    }
-
     [HttpPost]
+    // overposting attacks
+    // dto
     public async Task<ActionResult<WarehouseSection>> PostWarehouseSection(WarehouseSection warehouseSection)
     {
         if (warehouseSection is null)
         {
-            return Problem("warehouseSection is null.");
+            return BadRequest();
         }
-
-        _WarehouseSectionRepository.AddWarehouseSectionAsync(warehouseSection);
         
+        _context.Add(warehouseSection);
+        await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetWarehouseSection", new { id = warehouseSection.WarehouseSectionId });
+    }
+
+    [HttpPut("{id}")]
+    // overposting attacks
+    // dto
+    public async Task<IActionResult> PutWarehouseSection(int id, WarehouseSection updateWarehouseSection)
+    {
+        if (id != updateWarehouseSection.WarehouseSectionId)
+        {
+            return BadRequest();
+        }
+        
+        _context.Entry(updateWarehouseSection).State = EntityState.Modified;
+        
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!WarehouseSectionExists(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWarehouseSection(int id)
     {
-        await _WarehouseSectionRepository.DeleteWarehouseSectionAsync(id);
+        var warehouseSectionExists = WarehouseSectionExists(id);
+        if (!warehouseSectionExists)
+        {
+            return NotFound();
+        }
+        
+        var warehouseSection = await _context.WarehouseSection.FindAsync(id);
+        _context.WarehouseSection.Remove(warehouseSection);
+        await _context.SaveChangesAsync();
+        
         return NoContent();
     }
-
-    // business logic  
-
-    public Task<bool> WarehouseSectionExists(int id)
+    
+    // Logic
+    public bool WarehouseSectionExists(int id)
     {
-        return _WarehouseSectionRepository.WarehouseSectionExistsAsync(id);
+        var doesWarehouseSectionExist = _context.WarehouseSection
+            .Any(e => e.WarehouseSectionId == id);
+        return doesWarehouseSectionExist;
     }
 }

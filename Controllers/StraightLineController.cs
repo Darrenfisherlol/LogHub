@@ -1,6 +1,7 @@
-using LogHubStart.Models;
-using LogHubStart.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using LogHubStart.Data;
+using LogHubStart.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
 
@@ -8,71 +9,104 @@ namespace LogHubStart.Controllers;
 [ApiController]
 public class StraightLineController : ControllerBase
 {
-    private readonly IStraightLineRepository _straightLineRepository;
+    private readonly AppDbContext _context;
 
-    public StraightLineController(IStraightLineRepository straightLineRepository)
+    public StraightLineController(AppDbContext context)
     {
-        _straightLineRepository = straightLineRepository;
+        _context = context;
     }
 
-    // GET: api/StraightLine
+    //
+    // RESTCRUD
+    //
+    
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<StraightLine>>> GetStraightLines()
+    public async Task<IEnumerable<StraightLine>> GetStraightLines()
     {
-        var straightLines = await _straightLineRepository.GetAllStraightLinesAsync();
-        return Ok(straightLines);
+        var straightLines = await _context.StraightLine.ToListAsync();
+        return straightLines;
     }
 
-    // GET: api/StraightLine/5
     [HttpGet("{id}")]
     public async Task<ActionResult<StraightLine>> GetStraightLine(int id)
     {
-        var straightLine = await _straightLineRepository.GetStraightLineByIdAsync(id);
+        var straightLine = await _context.StraightLine.FindAsync(id);
+
         if (straightLine == null)
         {
             return NotFound();
         }
 
-        return Ok(straightLine);
+        return straightLine;
     }
 
-    // POST: api/StraightLine
     [HttpPost]
+    // overposting attacks
+    // dto
     public async Task<ActionResult<StraightLine>> PostStraightLine(StraightLine straightLine)
     {
-        await _straightLineRepository.AddStraightLineAsync(straightLine);
-        return CreatedAtAction(nameof(GetStraightLine), new { id = straightLine.StraightLineID }, straightLine);
-    }
-
-    // PUT: api/StraightLine/5
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutStraightLine(int id, StraightLine straightLine)
-    {
-        if (id != straightLine.StraightLineID)
+        if (straightLine is null)
         {
             return BadRequest();
         }
+        
+        _context.Add(straightLine);
+        await _context.SaveChangesAsync();
+        
+        return CreatedAtAction("GetStraightLine", new { id = straightLine.StraightLineID });
+    }
 
-        if (!await _straightLineRepository.StraightLineExistsAsync(id))
+    [HttpPut("{id}")]
+    // overposting attacks
+    // dto
+    public async Task<IActionResult> PutStraightLine(int id, StraightLine updateStraightLine)
+    {
+        if (id != updateStraightLine.StraightLineID)
+        {
+            return BadRequest();
+        }
+        
+        _context.Entry(updateStraightLine).State = EntityState.Modified;
+        
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!StraightLineExists(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteStraightLine(int id)
+    {
+        var straightLineExists = StraightLineExists(id);
+        if (!straightLineExists)
         {
             return NotFound();
         }
         
-        await _straightLineRepository.UpdateStraightLineAsync(straightLine);
-
+        var straightLine = await _context.StraightLine.FindAsync(id);
+        _context.StraightLine.Remove(straightLine);
+        await _context.SaveChangesAsync();
+        
         return NoContent();
     }
-
-    // DELETE: api/StraightLine/5
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteStraightLine(int id)
+    
+    // Logic
+    public bool StraightLineExists(int id)
     {
-        if (!await _straightLineRepository.StraightLineExistsAsync(id))
-        {
-            return NotFound();
-        }
-
-        await _straightLineRepository.DeleteStraightLineAsync(id);
-        return NoContent();
+        var doesStraightLineExist = _context.StraightLine
+            .Any(e => e.StraightLineID == id);
+        return doesStraightLineExist;
     }
 }
