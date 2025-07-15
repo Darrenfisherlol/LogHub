@@ -57,10 +57,10 @@ public class BinStorageController : ControllerBase
             Row = binStorage.Row
         };
 
-        await _context.AddAsync(binStorageUpdate);
+        await _context.BinStorage.AddAsync(binStorageUpdate);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetBinStorage", new { id = binStorage.BinStorageId });
+        return CreatedAtAction(nameof(GetBinStorage), new { id = binStorage.BinStorageId });
     }
 
     [HttpPut("{id}")]

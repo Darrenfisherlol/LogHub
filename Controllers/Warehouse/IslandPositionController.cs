@@ -56,10 +56,10 @@ public class IslandPositionController : ControllerBase
             WarehouseSection = islandPosition.WarehouseSection
         };
 
-        await _context.AddAsync(islandPosition);
+        await _context.IslandPosition.AddAsync(islandPosition);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetIslandPosition", new { id = islandPosition.IslandPositionId });
+        return CreatedAtAction(nameof(GetIslandPositions), new { id = islandPosition.IslandPositionId });
     }
 
     [HttpPut("{id}")]

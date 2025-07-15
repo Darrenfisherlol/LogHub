@@ -59,7 +59,7 @@ public class IslandController : ControllerBase
         await _context.AddAsync(islandUpdate);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetIsland", new { id = island.IslandId });
+        return CreatedAtAction(nameof(GetIsland), new { id = island.IslandId });
     }
 
     [HttpPut("{id}")]

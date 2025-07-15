@@ -64,10 +64,10 @@ public class WarehousesController : ControllerBase
             UpdatedDate = warehouse.UpdatedDate
         };
 
-        _context.AddAsync(addWarehouse);
+        _context.Warehouse.AddAsync(addWarehouse);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId });
+        return CreatedAtAction(nameof(GetWarehouse), new { id = warehouse.WarehouseId });
     }
 
     [HttpPut("{id}")]

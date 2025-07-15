@@ -56,10 +56,10 @@ public class StraightLineController : ControllerBase
             WarehouseSection = straightLine.WarehouseSection
         };
 
-        await _context.AddAsync(straightlineAdd);
+        await _context.StraightLine.AddAsync(straightlineAdd);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetStraightLine", new { id = straightLine.StraightLineID });
+        return CreatedAtAction(nameof(GetStraightLine), new { id = straightLine.StraightLineID });
     }
 
     [HttpPut("{id}")]

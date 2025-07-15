@@ -58,10 +58,10 @@ public class WarehouseSectionController : ControllerBase
             Desc = warehouseSection.Desc
         };
 
-        _context.AddAsync(addWarehouseSection);
+        await _context.WarehouseSection.AddAsync(addWarehouseSection);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetWarehouseSection", new { id = warehouseSection.WarehouseSectionId });
+        return CreatedAtAction(nameof(GetWarehouseSection), new { id = warehouseSection.WarehouseSectionId });
     }
 
     [HttpPut("{id}")]

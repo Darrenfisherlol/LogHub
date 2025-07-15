@@ -60,10 +60,10 @@ public class BinController : ControllerBase
             Length = bin.Length
         };
 
-        _context.Add(binUpdate);
+        await _context.Bin.Add(binUpdate);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetBin", new { id = bin.BinId });
+        return CreatedAtAction(nameof(GetBin), new { id = bin.BinId });
     }
 
     [HttpPut("{id}")]

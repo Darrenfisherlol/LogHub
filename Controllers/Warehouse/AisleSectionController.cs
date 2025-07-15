@@ -61,7 +61,7 @@ public class AisleSectionController : ControllerBase
         await _context.AisleSection.AddAsync(aisleSectionUpdate);
         await _context.SaveChangesAsync();
         
-        return CreatedAtAction("GetAisleSection", new { id = aisleSection.AisleSectionId });
+        return CreatedAtAction(nameof(GetAisleSection), new { id = aisleSection.AisleSectionId });
     }
 
     [HttpPut("{id}")]
