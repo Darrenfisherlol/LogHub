@@ -41,16 +41,30 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpPost]
-    // overposting attacks
-    // dto
     public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
     {
         if (warehouse is null)
         {
             return BadRequest();
         }
-        
-        _context.Add(warehouse);
+
+        Warehouse addWarehouse = new Warehouse
+        {
+            WarehouseName = warehouse.WarehouseName,
+            Address = warehouse.Address,
+            State = warehouse.State,
+            Country = warehouse.Country,
+            ZipCode = warehouse.ZipCode,
+            OwnerName = warehouse.OwnerName,
+            Phone = warehouse.Phone,
+            Email = warehouse.Email,
+            CreatedBy = warehouse.CreatedBy,
+            CreatedDate = warehouse.CreatedDate,
+            UpdatedBy = warehouse.UpdatedBy,
+            UpdatedDate = warehouse.UpdatedDate
+        };
+
+        _context.AddAsync(addWarehouse);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetWarehouse", new { id = warehouse.WarehouseId });

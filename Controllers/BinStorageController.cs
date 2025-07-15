@@ -50,7 +50,14 @@ public class BinStorageController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(binStorage);
+        BinStorage binStorageUpdate = new BinStorage
+        {
+            WarehouseSectionId = binStorage.WarehouseSectionId,
+            WarehouseSection = binStorage.WarehouseSection,
+            Row = binStorage.Row
+        };
+
+        await _context.AddAsync(binStorageUpdate);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetBinStorage", new { id = binStorage.BinStorageId });

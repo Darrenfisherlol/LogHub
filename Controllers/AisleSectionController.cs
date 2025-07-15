@@ -50,7 +50,15 @@ public class AisleSectionController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(aisleSection);
+        AisleSection aisleSectionUpdate = new AisleSection
+        {
+            AisleId = aisleSection.AisleId,
+            Aisle = aisleSection.Aisle,
+            PositionCapacity = aisleSection.PositionCapacity,
+            SectionName = aisleSection.SectionName
+        };
+
+        await _context.AisleSection.AddAsync(aisleSectionUpdate);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetAisleSection", new { id = aisleSection.AisleSectionId });

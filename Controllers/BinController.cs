@@ -49,8 +49,18 @@ public class BinController : ControllerBase
         {
             return BadRequest();
         }
-        
-        _context.Add(bin);
+
+        Bin binUpdate = new Bin
+        {
+            BinStorageId = bin.StorageId,
+            BinStorage = bin.BinStorage,
+            BinCapacity = bin.Capacity,
+            Height = bin.Height,
+            Width = bin.Width,
+            Length = bin.Length
+        };
+
+        _context.Add(binUpdate);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetBin", new { id = bin.BinId });

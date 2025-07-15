@@ -50,7 +50,15 @@ public class WarehouseSectionController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(warehouseSection);
+        
+        Warehouse addWarehouseSection = new Warehouse
+        {
+            WarehouseId = warehouseSection.WarehouseId,
+            Warehouse = warehouseSection.Warehouse,
+            Desc = warehouseSection.Desc
+        };
+
+        _context.AddAsync(addWarehouseSection);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetWarehouseSection", new { id = warehouseSection.WarehouseSectionId });

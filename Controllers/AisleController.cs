@@ -50,7 +50,14 @@ public class AisleController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(aisle);
+         Aisle aisleUpdate = new Aisle
+        {
+            StraightLineId = aisle.StraightLineId,
+            StraightLine = aisle.StraightLine,
+            AisleName = aisle.AisleName
+        };
+
+        await _context.Aisle.AddAsync(aisleUpdate);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetAisle", new { id = aisle.AisleId });

@@ -49,8 +49,18 @@ public class AisleSectionPositionController : ControllerBase
         {
             return BadRequest();
         }
-        
-        _context.AisleSectionPosition.Add(aisleSectionPosition);
+
+        AisleSectionPosition asp = new AisleSectionPosition
+        {
+            AisleSectionId = aisleSectionPosition.AisleSectionId,
+            AisleSection = aisleSectionPosition.AisleSection,
+            PositionCapacity = aisleSectionPosition.PositionCapacity,
+            Height = aisleSectionPosition.Height,
+            Width = aisleSectionPosition.Width,
+            Length = aisleSectionPosition.Length
+        };
+
+        await _context.AisleSectionPosition.AddAsync(asp);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetAisleSection", new { id = aisleSectionPosition.AisleSectionPositionId });

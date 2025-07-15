@@ -50,7 +50,13 @@ public class IslandController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(island);
+        IslandPosition islandUpdate = new IslandPosition
+        {
+            WarehouseSectionId = island.WarehouseSectionId,
+            WarehouseSection = island.WarehouseSection
+        };
+
+        await _context.AddAsync(islandUpdate);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetIsland", new { id = island.IslandId });

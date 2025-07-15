@@ -50,7 +50,13 @@ public class StraightLineController : ControllerBase
             return BadRequest();
         }
         
-        _context.Add(straightLine);
+        StraightLine straightlineAdd = new StraightLine
+        {
+            WarehouseSectionId = straightLine.WarehouseSectionId,
+            WarehouseSection = straightLine.WarehouseSection
+        };
+
+        await _context.AddAsync(straightlineAdd);
         await _context.SaveChangesAsync();
         
         return CreatedAtAction("GetStraightLine", new { id = straightLine.StraightLineID });
