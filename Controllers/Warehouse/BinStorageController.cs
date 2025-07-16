@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class BinStorageController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<BinStorage>> GetBinStorages()
     {
@@ -49,17 +49,17 @@ public class BinStorageController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         BinStorage binStorageUpdate = new BinStorage
         {
-            WarehouseSectionId = binStorage.WarehouseSectionId,
+            WarehouseSectionsId = binStorage.WarehouseSectionsId,
             WarehouseSection = binStorage.WarehouseSection,
-            Row = binStorage.Row
+            Row = binStorage.Row,
         };
 
         await _context.BinStorage.AddAsync(binStorageUpdate);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetBinStorage), new { id = binStorage.BinStorageId });
     }
 
@@ -72,9 +72,9 @@ public class BinStorageController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateBinStorage).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -101,19 +101,18 @@ public class BinStorageController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var binStorage = await _context.BinStorage.FindAsync(id);
         _context.BinStorage.Remove(binStorage);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool BinStorageExists(int id)
     {
-        var doesBinStorageExist = _context.BinStorage
-            .Any(e => e.BinStorageId == id);
+        var doesBinStorageExist = _context.BinStorage.Any(e => e.BinStorageId == id);
         return doesBinStorageExist;
     }
 }

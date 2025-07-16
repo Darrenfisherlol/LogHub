@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Product>> GetProducts()
     {
@@ -49,7 +49,7 @@ public class ProductController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         Product addProduct = new Product
         {
             CategoryId = product.CategoryId,
@@ -57,13 +57,13 @@ public class ProductController : ControllerBase
             SKU = product.SKU,
             Name = product.Name,
             Description = product.Description,
-            Price = product.Price
+            Price = product.Price,
         };
 
         await _context.Product.AddAsync(addProduct);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetProduct), new { id = Product.ProductId });
+
+        return CreatedAtAction(nameof(GetProduct), new { id = product.ProductId });
     }
 
     [HttpPut("{id}")]
@@ -75,9 +75,9 @@ public class ProductController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateProduct).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +104,18 @@ public class ProductController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var product = await _context.Product.FindAsync(id);
         _context.Product.Remove(product);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool ProductExists(int id)
     {
-        var doesProductExist = _context.Product
-            .Any(e => e.ProductId == id);
+        var doesProductExist = _context.Product.Any(e => e.ProductId == id);
         return doesProductExist;
     }
 }

@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class WarehouseSectionController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<WarehouseSection>> GetWarehouseSections()
     {
@@ -43,39 +43,46 @@ public class WarehouseSectionController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<WarehouseSection>> PostWarehouseSection(WarehouseSection warehouseSection)
+    public async Task<ActionResult<WarehouseSection>> PostWarehouseSection(
+        WarehouseSection warehouseSection
+    )
     {
         if (warehouseSection is null)
         {
             return BadRequest();
         }
-        
-        
-        Warehouse addWarehouseSection = new Warehouse
+
+        WarehouseSection addWarehouseSection = new WarehouseSection
         {
             WarehouseId = warehouseSection.WarehouseId,
             Warehouse = warehouseSection.Warehouse,
-            Desc = warehouseSection.Desc
+            Desc = warehouseSection.Desc,
         };
 
         await _context.WarehouseSection.AddAsync(addWarehouseSection);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetWarehouseSection), new { id = warehouseSection.WarehouseSectionId });
+
+        return CreatedAtAction(
+            nameof(GetWarehouseSection),
+            new { id = warehouseSection.WarehouseSectionId }
+        );
     }
 
     [HttpPut("{id}")]
     // overposting attacks
     // dto
-    public async Task<IActionResult> PutWarehouseSection(int id, WarehouseSection updateWarehouseSection)
+    public async Task<IActionResult> PutWarehouseSection(
+        int id,
+        WarehouseSection updateWarehouseSection
+    )
     {
         if (id != updateWarehouseSection.WarehouseSectionId)
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateWarehouseSection).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -102,19 +109,20 @@ public class WarehouseSectionController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var warehouseSection = await _context.WarehouseSection.FindAsync(id);
         _context.WarehouseSection.Remove(warehouseSection);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool WarehouseSectionExists(int id)
     {
-        var doesWarehouseSectionExist = _context.WarehouseSection
-            .Any(e => e.WarehouseSectionId == id);
+        var doesWarehouseSectionExist = _context.WarehouseSection.Any(e =>
+            e.WarehouseSectionId == id
+        );
         return doesWarehouseSectionExist;
     }
 }

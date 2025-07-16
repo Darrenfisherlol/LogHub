@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class IslandController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Island>> GetIslands()
     {
@@ -49,16 +49,16 @@ public class IslandController : ControllerBase
         {
             return BadRequest();
         }
-        
-        IslandPosition islandUpdate = new IslandPosition
+
+        Island islandUpdate = new Island
         {
-            WarehouseSectionId = island.WarehouseSectionId,
-            WarehouseSection = island.WarehouseSection
+            WarehouseSectionsId = island.WarehouseSectionsId,
+            WarehouseSection = island.WarehouseSection,
         };
 
         await _context.AddAsync(islandUpdate);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetIsland), new { id = island.IslandId });
     }
 
@@ -71,9 +71,9 @@ public class IslandController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateIsland).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -100,19 +100,18 @@ public class IslandController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var island = await _context.Island.FindAsync(id);
         _context.Island.Remove(island);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool IslandExists(int id)
     {
-        var doesIslandExist = _context.Island
-            .Any(e => e.IslandId == id);
+        var doesIslandExist = _context.Island.Any(e => e.IslandId == id);
         return doesIslandExist;
     }
 }

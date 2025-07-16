@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class InvoiceController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Invoice>> GetInvoices()
     {
@@ -49,7 +49,7 @@ public class InvoiceController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         Invoice addInvoice = new Invoice
         {
             CustomerId = invoice.CustomerId,
@@ -58,13 +58,13 @@ public class InvoiceController : ControllerBase
             Supplier = invoice.Supplier,
             Date = invoice.Date,
             Amount = invoice.Amount,
-            Tax = invoice.Tax
+            Tax = invoice.Tax,
         };
 
         await _context.Invoice.AddAsync(addInvoice);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetInvoice), new { id = Invoice.InvoiceId });
+
+        return CreatedAtAction(nameof(GetInvoice), new { id = invoice.InvoiceId });
     }
 
     [HttpPut("{id}")]
@@ -76,9 +76,9 @@ public class InvoiceController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateInvoice).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -105,19 +105,18 @@ public class InvoiceController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var invoice = await _context.Invoice.FindAsync(id);
         _context.Invoice.Remove(invoice);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool InvoiceExists(int id)
     {
-        var doesInvoiceExist = _context.Invoice
-            .Any(e => e.InvoiceId == id);
+        var doesInvoiceExist = _context.Invoice.Any(e => e.InvoiceId == id);
         return doesInvoiceExist;
     }
 }

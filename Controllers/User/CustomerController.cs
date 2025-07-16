@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class CustomerController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Customer>> GetCustomers()
     {
@@ -49,20 +49,19 @@ public class CustomerController : ControllerBase
         {
             return BadRequest();
         }
-        
-        
+
         Customer addCustomer = new Customer
         {
-            CustomerName = customer.Name,
+            CustomerName = customer.CustomerName,
             Email = customer.Email,
             Phone = customer.Phone,
-            CreatedDate = customer.CreatedDate
+            CreatedDate = customer.CreatedDate,
         };
 
         await _context.AddAsync(addCustomer);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetCustomer), new { id = Customer.CustomerId });
+
+        return CreatedAtAction(nameof(GetCustomer), new { id = customer.CustomerId });
     }
 
     [HttpPut("{id}")]
@@ -74,9 +73,9 @@ public class CustomerController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateCustomer).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -103,19 +102,18 @@ public class CustomerController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var customer = await _context.Customer.FindAsync(id);
         _context.Customer.Remove(customer);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool CustomerExists(int id)
     {
-        var doesCustomerExist = _context.Customer
-            .Any(e => e.CustomerId == id);
+        var doesCustomerExist = _context.Customer.Any(e => e.CustomerId == id);
         return doesCustomerExist;
     }
 }

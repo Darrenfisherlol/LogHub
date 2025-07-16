@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class OrderProductController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<OrderProduct>> GetOrderProducts()
     {
@@ -49,20 +49,20 @@ public class OrderProductController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         OrderProduct addOrderProduct = new OrderProduct
         {
             ProductId = orderProduct.ProductId,
             Product = orderProduct.Product,
             OrderId = orderProduct.OrderId,
             Order = orderProduct.Order,
-            Quantity = orderProduct.Quantity
+            Quantity = orderProduct.Quantity,
         };
 
         await _context.OrderProduct.AddAsync(addOrderProduct);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetOrderProduct), new { id = OrderProduct.OrderProductId });
+
+        return CreatedAtAction(nameof(GetOrderProduct), new { id = orderProduct.OrderProductId });
     }
 
     [HttpPut("{id}")]
@@ -74,9 +74,9 @@ public class OrderProductController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateOrderProduct).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -98,24 +98,23 @@ public class OrderProductController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteOrderProduct(int id)
     {
-        var OrderProductExists = OrderProductExists(id);
-        if (!OrderProductExists)
+        var orderProductExists = OrderProductExists(id);
+        if (!orderProductExists)
         {
             return NotFound();
         }
-        
+
         var OrderProduct = await _context.OrderProduct.FindAsync(id);
         _context.OrderProduct.Remove(OrderProduct);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
-    public bool OrderProductExists(int id)
+    private bool OrderProductExists(int id)
     {
-        var doesOrderProductExist = _context.OrderProduct
-            .Any(e => e.OrderProductId == id);
+        var doesOrderProductExist = _context.OrderProduct.Any(e => e.OrderProductId == id);
         return doesOrderProductExist;
     }
 }

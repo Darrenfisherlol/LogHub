@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class EmployeeController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Employee>> GetEmployees()
     {
@@ -49,8 +49,7 @@ public class EmployeeController : ControllerBase
         {
             return BadRequest();
         }
-        
-        
+
         Employee addEmployee = new Employee
         {
             RoleId = employee.RoleId,
@@ -59,13 +58,13 @@ public class EmployeeController : ControllerBase
             First = employee.First,
             Last = employee.Last,
             Email = employee.Email,
-            CreatedDate = employee.CreatedDate
+            CreatedDate = employee.CreatedDate,
         };
 
         await _context.Employee.AddAsync(addEmployee);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetEmployee), new { id = Employee.EmployeeId });
+
+        return CreatedAtAction(nameof(GetEmployee), new { id = employee.EmployeeId });
     }
 
     [HttpPut("{id}")]
@@ -77,9 +76,9 @@ public class EmployeeController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateEmployee).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -106,19 +105,18 @@ public class EmployeeController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var employee = await _context.Employee.FindAsync(id);
         _context.Employee.Remove(employee);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool EmployeeExists(int id)
     {
-        var doesEmployeeExist = _context.Employee
-            .Any(e => e.EmployeeId == id);
+        var doesEmployeeExist = _context.Employee.Any(e => e.EmployeeId == id);
         return doesEmployeeExist;
     }
 }

@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class WarehousesController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Warehouse>> GetWarehouses()
     {
@@ -61,12 +61,12 @@ public class WarehousesController : ControllerBase
             CreatedBy = warehouse.CreatedBy,
             CreatedDate = warehouse.CreatedDate,
             UpdatedBy = warehouse.UpdatedBy,
-            UpdatedDate = warehouse.UpdatedDate
+            UpdateDate = warehouse.UpdateDate,
         };
 
         _context.Warehouse.AddAsync(addWarehouse);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetWarehouse), new { id = warehouse.WarehouseId });
     }
 
@@ -79,9 +79,9 @@ public class WarehousesController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateWarehouse).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -108,19 +108,18 @@ public class WarehousesController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var warehouse = await _context.Warehouse.FindAsync(id);
         _context.Warehouse.Remove(warehouse);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool WarehouseExists(int id)
     {
-        var doesWarehouseExist = _context.Warehouse
-            .Any(e => e.WarehouseId == id);
+        var doesWarehouseExist = _context.Warehouse.Any(e => e.WarehouseId == id);
         return doesWarehouseExist;
     }
 }

@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class InventoryMovementController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<InventoryMovement>> GetInventoryMovements()
     {
@@ -43,13 +43,15 @@ public class InventoryMovementController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<InventoryMovement>> PostInventoryMovement(InventoryMovement inventoryMovement)
+    public async Task<ActionResult<InventoryMovement>> PostInventoryMovement(
+        InventoryMovement inventoryMovement
+    )
     {
         if (inventoryMovement is null)
         {
             return BadRequest();
         }
-        
+
         InventoryMovement addInventoryMovement = new InventoryMovement
         {
             ItemId = inventoryMovement.ItemId,
@@ -62,27 +64,33 @@ public class InventoryMovementController : ControllerBase
             Order = inventoryMovement.Order,
             MovementDate = inventoryMovement.MovementDate,
             MovementByEmployeeId = inventoryMovement.MovementByEmployeeId,
-            MovementByEmployee = inventoryMovement.MovementByEmployee
+            MovementByEmployee = inventoryMovement.MovementByEmployee,
         };
 
         await _context.InventoryMovement.AddAsync(addInventoryMovement);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetInventoryMovement), new { id = InventoryMovement.InventoryMovementId });
+
+        return CreatedAtAction(
+            nameof(GetInventoryMovement),
+            new { id = inventoryMovement.InventoryMovementId }
+        );
     }
 
     [HttpPut("{id}")]
     // overposting attacks
     // dto
-    public async Task<IActionResult> PutInventoryMovement(int id, InventoryMovement updateInventoryMovement)
+    public async Task<IActionResult> PutInventoryMovement(
+        int id,
+        InventoryMovement updateInventoryMovement
+    )
     {
         if (id != updateInventoryMovement.InventoryMovementId)
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateInventoryMovement).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -109,19 +117,20 @@ public class InventoryMovementController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var inventoryMovement = await _context.InventoryMovement.FindAsync(id);
         _context.InventoryMovement.Remove(inventoryMovement);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool InventoryMovementExists(int id)
     {
-        var doesInventoryMovementExist = _context.InventoryMovement
-            .Any(e => e.InventoryMovementId == id);
+        var doesInventoryMovementExist = _context.InventoryMovement.Any(e =>
+            e.InventoryMovementId == id
+        );
         return doesInventoryMovementExist;
     }
 }

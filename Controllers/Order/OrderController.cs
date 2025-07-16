@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class OrderController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Order>> GetOrders()
     {
@@ -49,7 +49,7 @@ public class OrderController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         Order addOrder = new Order
         {
             InvoiceId = order.InvoiceId,
@@ -57,13 +57,13 @@ public class OrderController : ControllerBase
             EmployeeId = order.EmployeeId,
             Employee = order.Employee,
             StartDate = order.StartDate,
-            EndDate = order.EndDate
+            EndDate = order.EndDate,
         };
 
         await _context.AddAsync(addOrder);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetOrder), new { id = Order.OrderId });
+
+        return CreatedAtAction(nameof(GetOrder), new { id = order.OrderId });
     }
 
     [HttpPut("{id}")]
@@ -75,9 +75,9 @@ public class OrderController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateOrder).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +104,18 @@ public class OrderController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var order = await _context.Order.FindAsync(id);
         _context.Order.Remove(order);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool OrderExists(int id)
     {
-        var doesOrderExist = _context.Order
-            .Any(e => e.OrderId == id);
+        var doesOrderExist = _context.Order.Any(e => e.OrderId == id);
         return doesOrderExist;
     }
 }

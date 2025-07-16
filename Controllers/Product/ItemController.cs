@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class ItemController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Item>> GetItems()
     {
@@ -49,7 +49,7 @@ public class ItemController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         Item addItem = new Item
         {
             ItemLocationId = item.ItemLocationId,
@@ -57,13 +57,13 @@ public class ItemController : ControllerBase
             ProductId = item.ProductId,
             Product = item.Product,
             Quantity = item.Quantity,
-            Status = item.Status
+            Status = item.Status,
         };
 
         await _context.Item.AddAsync(addItem);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetItem), new { id = Item.ItemId });
+
+        return CreatedAtAction(nameof(GetItem), new { id = item.ItemId });
     }
 
     [HttpPut("{id}")]
@@ -75,9 +75,9 @@ public class ItemController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateItem).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +104,18 @@ public class ItemController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var item = await _context.Item.FindAsync(id);
         _context.Item.Remove(item);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool ItemExists(int id)
     {
-        var doesItemExist = _context.Item
-            .Any(e => e.ItemId == id);
+        var doesItemExist = _context.Item.Any(e => e.ItemId == id);
         return doesItemExist;
     }
 }

@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class AisleSectionController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<AisleSection>> GetAisleSections()
     {
@@ -49,18 +49,17 @@ public class AisleSectionController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         AisleSection aisleSectionUpdate = new AisleSection
         {
             AisleId = aisleSection.AisleId,
             Aisle = aisleSection.Aisle,
-            PositionCapacity = aisleSection.PositionCapacity,
-            SectionName = aisleSection.SectionName
+            SectionName = aisleSection.SectionName,
         };
 
         await _context.AisleSection.AddAsync(aisleSectionUpdate);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetAisleSection), new { id = aisleSection.AisleSectionId });
     }
 
@@ -73,9 +72,9 @@ public class AisleSectionController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateAisleSection).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -102,19 +101,18 @@ public class AisleSectionController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var aisleSection = await _context.AisleSection.FindAsync(id);
         _context.AisleSection.Remove(aisleSection);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool AisleSectionExists(int id)
     {
-        var doesAisleSectionExist = _context.AisleSection
-            .Any(e => e.AisleSectionId == id);
+        var doesAisleSectionExist = _context.AisleSection.Any(e => e.AisleSectionId == id);
         return doesAisleSectionExist;
     }
 }

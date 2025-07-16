@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class ItemLocationController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<ItemLocation>> GetItemLocations()
     {
@@ -49,7 +49,7 @@ public class ItemLocationController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         ItemLocation addItemLocation = new ItemLocation
         {
             IslandPositionId = itemLocation.IslandPositionId,
@@ -62,8 +62,8 @@ public class ItemLocationController : ControllerBase
 
         await _context.ItemLocation.AddAsync(addItemLocation);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetItemLocation), new { id = ItemLocation.ItemLocationId });
+
+        return CreatedAtAction(nameof(GetItemLocation), new { id = itemLocation.ItemLocationId });
     }
 
     [HttpPut("{id}")]
@@ -75,9 +75,9 @@ public class ItemLocationController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateItemLocation).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +104,18 @@ public class ItemLocationController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var itemLocation = await _context.ItemLocation.FindAsync(id);
         _context.ItemLocation.Remove(itemLocation);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool ItemLocationExists(int id)
     {
-        var doesItemLocationExist = _context.ItemLocation
-            .Any(e => e.ItemLocationId == id);
+        var doesItemLocationExist = _context.ItemLocation.Any(e => e.ItemLocationId == id);
         return doesItemLocationExist;
     }
 }

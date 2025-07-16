@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class SupplierController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Supplier>> GetSuppliers()
     {
@@ -49,19 +49,18 @@ public class SupplierController : ControllerBase
         {
             return BadRequest();
         }
-        
-        
+
         Supplier addSupplier = new Supplier
         {
-            SupplierName = Supplier.Name,
-            Email = Supplier.Email,
-            Phone = Supplier.Phone
+            SupplierName = supplier.SupplierName,
+            Email = supplier.Email,
+            Phone = supplier.Phone,
         };
 
         await _context.Supplier.AddAsync(addSupplier);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetSupplier), new { id = Supplier.SupplierId });
+
+        return CreatedAtAction(nameof(GetSupplier), new { id = supplier.SupplierId });
     }
 
     [HttpPut("{id}")]
@@ -73,9 +72,9 @@ public class SupplierController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateSupplier).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -102,19 +101,18 @@ public class SupplierController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var supplier = await _context.Supplier.FindAsync(id);
         _context.Supplier.Remove(supplier);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool SupplierExists(int id)
     {
-        var doesSupplierExist = _context.Supplier
-            .Any(e => e.SupplierId == id);
+        var doesSupplierExist = _context.Supplier.Any(e => e.SupplierId == id);
         return doesSupplierExist;
     }
 }

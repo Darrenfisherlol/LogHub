@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class IslandPositionController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<IslandPosition>> GetIslandPositions()
     {
@@ -43,23 +43,32 @@ public class IslandPositionController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<IslandPosition>> PostIslandPosition(IslandPosition islandPosition)
+    public async Task<ActionResult<IslandPosition>> PostIslandPosition(
+        IslandPosition islandPosition
+    )
     {
         if (islandPosition is null)
         {
             return BadRequest();
         }
-        
-        IslandPosition islandPosition = new IslandPosition
+
+        IslandPosition updatedIslandPosition = new IslandPosition
         {
-            WarehouseSectionId = islandPosition.WarehouseSectionId,
-            WarehouseSection = islandPosition.WarehouseSection
+            IslandId = islandPosition.IslandId,
+            Island = islandPosition.Island,
+            IslandCapacity = islandPosition.IslandCapacity,
+            Height = islandPosition.Height,
+            Width = islandPosition.Width,
+            Length = islandPosition.Length,
         };
 
-        await _context.IslandPosition.AddAsync(islandPosition);
+        await _context.IslandPosition.AddAsync(updatedIslandPosition);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetIslandPositions), new { id = islandPosition.IslandPositionId });
+
+        return CreatedAtAction(
+            nameof(GetIslandPositions),
+            new { id = islandPosition.IslandPositionId }
+        );
     }
 
     [HttpPut("{id}")]
@@ -71,9 +80,9 @@ public class IslandPositionController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateIslandPosition).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -100,19 +109,18 @@ public class IslandPositionController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var islandPosition = await _context.IslandPosition.FindAsync(id);
         _context.IslandPosition.Remove(islandPosition);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool IslandPositionExists(int id)
     {
-        var doesIslandPositionExist = _context.IslandPosition
-            .Any(e => e.IslandPositionId == id);
+        var doesIslandPositionExist = _context.IslandPosition.Any(e => e.IslandPositionId == id);
         return doesIslandPositionExist;
     }
 }

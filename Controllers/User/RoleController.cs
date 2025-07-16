@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class RoleController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Role>> GetRoles()
     {
@@ -49,19 +49,18 @@ public class RoleController : ControllerBase
         {
             return BadRequest();
         }
-        
-        
+
         Role addRole = new Role
         {
             AdminAccess = role.AdminAccess,
             ManagerAccess = role.ManagerAccess,
-            WorkerAccess = role.WorkerAccess
+            WorkerAccess = role.WorkerAccess,
         };
 
         await _context.Role.AddAsync(addRole);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetRole), new { id = Role.RoleId });
+
+        return CreatedAtAction(nameof(GetRole), new { id = role.RoleId });
     }
 
     [HttpPut("{id}")]
@@ -73,9 +72,9 @@ public class RoleController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateRole).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -102,19 +101,18 @@ public class RoleController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var role = await _context.Role.FindAsync(id);
         _context.Role.Remove(role);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool RoleExists(int id)
     {
-        var doesRoleExist = _context.Role
-            .Any(e => e.RoleId == id);
+        var doesRoleExist = _context.Role.Any(e => e.RoleId == id);
         return doesRoleExist;
     }
 }

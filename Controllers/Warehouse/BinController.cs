@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class BinController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<Bin>> GetBins()
     {
@@ -52,17 +52,17 @@ public class BinController : ControllerBase
 
         Bin binUpdate = new Bin
         {
-            BinStorageId = bin.StorageId,
+            BinStorageId = bin.BinStorageId,
             BinStorage = bin.BinStorage,
-            BinCapacity = bin.Capacity,
+            BinCapacity = bin.BinCapacity,
             Height = bin.Height,
             Width = bin.Width,
-            Length = bin.Length
+            Length = bin.Length,
         };
 
-        await _context.Bin.Add(binUpdate);
+        await _context.Bin.AddAsync(binUpdate);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetBin), new { id = bin.BinId });
     }
 
@@ -75,9 +75,9 @@ public class BinController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateBin).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +104,18 @@ public class BinController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var bin = await _context.Bin.FindAsync(id);
         _context.Bin.Remove(bin);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool BinExists(int id)
     {
-        var doesBinExist = _context.Bin
-            .Any(e => e.BinId == id);
+        var doesBinExist = _context.Bin.Any(e => e.BinId == id);
         return doesBinExist;
     }
 }
