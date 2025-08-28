@@ -1,4 +1,5 @@
 using LogHubStart.Data;
+using LogHubStart.DTOs;
 using LogHubStart.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,11 @@ public class WarehouseSectionController : ControllerBase
     [HttpGet]
     public async Task<IEnumerable<WarehouseSection>> GetWarehouseSections()
     {
+        //
+        // Does the user have auth
+        // Limit per linq
+        //
+        
         var warehouseSections = await _context.WarehouseSection.ToListAsync();
         return warehouseSections;
     }
@@ -41,88 +47,75 @@ public class WarehouseSectionController : ControllerBase
     }
 
     [HttpPost]
-    // overposting attacks
-    // dto
-    public async Task<ActionResult<WarehouseSection>> PostWarehouseSection(
-        WarehouseSection warehouseSection
+    // overposting attacks ~ use dto
+    public async Task<ActionResult> PostWarehouseSection(
+        [FromBody] CreateWarehouseSectionDTO warehouseSectionDto
     )
     {
-        if (warehouseSection is null)
+        if (warehouseSectionDto is null)
         {
             return BadRequest();
         }
 
-        WarehouseSection addWarehouseSection = new WarehouseSection
+        WarehouseSection newWarehouseSection = new WarehouseSection
         {
-            WarehouseId = warehouseSection.WarehouseId,
-            Warehouse = warehouseSection.Warehouse,
-            Desc = warehouseSection.Desc,
+            WarehouseId = warehouseSectionDto.WarehouseId,
+            Desc = warehouseSectionDto.Desc,
         };
 
-        await _context.WarehouseSection.AddAsync(addWarehouseSection);
+        await _context.WarehouseSection.AddAsync(newWarehouseSection);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(
             nameof(GetWarehouseSection),
-            new { id = warehouseSection.WarehouseSectionId }
+            new { id = newWarehouseSection.WarehouseSectionId }
         );
     }
 
     [HttpPut("{id}")]
     // overposting attacks
     // dto
-    public async Task<IActionResult> PutWarehouseSection(
-        int id,
-        WarehouseSection updateWarehouseSection
-    )
+    public async Task<IActionResult> PutWarehouseSection([FromBody] UpdateWarehouseSectionDTO dto)
     {
-        if (id != updateWarehouseSection.WarehouseSectionId)
-        {
-            return BadRequest();
-        }
+        var warehouseSection = await _context.WarehouseSection.FindAsync(dto.WarehouseSectionId);
 
-        _context.Entry(updateWarehouseSection).State = EntityState.Modified;
-
-        try
+        if (warehouseSection == null)
         {
-            await _context.SaveChangesAsync();
+            return NotFound();
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!WarehouseSectionExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        
+        warehouseSection.WarehouseId = dto.WarehouseId;
+        warehouseSection.Desc = dto.Desc;
+        
+        await _context.SaveChangesAsync();
+        
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWarehouseSection(int id)
     {
-        var warehouseSectionExists = WarehouseSectionExists(id);
-        if (!warehouseSectionExists)
+        var warehouseSection = await _context.WarehouseSection.FirstOrDefaultAsync(x => x.WarehouseSectionId == id);
+        if (warehouseSection is null)
         {
             return NotFound();
         }
+        
+        var hasStraightLine = await _context.StraightLine.AnyAsync(x => x.WarehouseSectionId == id);
+        var hasBin = await _context.BinStorage.AnyAsync(x => x.WarehouseSectionsId == id);
+        var hasIsland = await _context.Island.AnyAsync(x => x.WarehouseSectionsId == id);
 
-        var warehouseSection = await _context.WarehouseSection.FindAsync(id);
+        if (hasStraightLine || hasBin || hasIsland)
+        {
+            // cannot delete bc its used in a type of warehouse storage
+            return BadRequest();
+        }
+        
+        // user has auth check
+        
         _context.WarehouseSection.Remove(warehouseSection);
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    // Logic
-    public bool WarehouseSectionExists(int id)
-    {
-        var doesWarehouseSectionExist = _context.WarehouseSection.Any(e =>
-            e.WarehouseSectionId == id
-        );
-        return doesWarehouseSectionExist;
     }
 }

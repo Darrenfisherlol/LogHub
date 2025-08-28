@@ -18,10 +18,10 @@ public class Order
 
     [Required]
     public DateTime StartDate { get; set; }
+
     [Required]
     public DateTime EndDate { get; set; }
 
     public ICollection<OrderProduct> OrderProducts { get; set; }
     public ICollection<Item> FulfilledItems { get; set; }
-
 }

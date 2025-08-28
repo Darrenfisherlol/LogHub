@@ -35,7 +35,11 @@ public class AppDbContext : DbContext
             .WithMany(sl => sl.Items) 
             .HasForeignKey(i => i.ItemLocationId)
             .OnDelete(DeleteBehavior.Restrict);
-            
+        
+        
+        // OrderProduct
+
+        
         modelBuilder.Entity<OrderProduct>()
             .HasKey(op => new { op.OrderId, op.ProductId });
 
@@ -49,6 +53,8 @@ public class AppDbContext : DbContext
             .WithMany(p => p.OrderProducts)
             .HasForeignKey(op => op.ProductId);
 
+        // InventoryMovement
+        
         modelBuilder.Entity<InventoryMovement>()
             .HasOne(m => m.ToItemLocation) 
             .WithMany() 
@@ -67,41 +73,77 @@ public class AppDbContext : DbContext
             .HasForeignKey(m => m.OrderId)
             .OnDelete(DeleteBehavior.SetNull); 
 
+        // Date stuff c# to postgres
+        
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.Property(i => i.Date)
+                .HasColumnType("timestamptz");
+        });
+        
+        modelBuilder.Entity<Employee>(entity =>
+        {
+            entity.Property(i => i.CreatedDate)
+                .HasColumnType("timestamptz");
+        });
+        
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.Property(i => i.CreatedDate)
+                .HasColumnType("timestamptz");
+        });
+        
+        modelBuilder.Entity<InventoryMovement>(entity =>
+        {
+            entity.Property(i => i.MovementDate)
+                .HasColumnType("timestamptz");
+        });
+        
+        modelBuilder.Entity<Warehouse>(entity =>
+        {
+            entity.Property(i => i.CreatedDate)
+                .HasColumnType("timestamptz");
+            
+            entity.Property(i => i.UpdateDate)
+                .HasColumnType("timestamptz");
+            
+        });
+        
     }
     
     
     /// <summary>
     /// Showcase all models we will use
     /// </summary>
-    public DbSet<Warehouse> Warehouses => Set<Warehouse>();
-    public DbSet<WarehouseSection> WarehouseSections => Set<WarehouseSection>();
-    // public DbSet<SectionType> SectionTypes => Set<SectionType>();
+    /// 
+    public DbSet<Warehouse> Warehouse => Set<Warehouse>();
+    public DbSet<WarehouseSection> WarehouseSection => Set<WarehouseSection>();
     
-    public DbSet<Island> Islands => Set<Island>();
-    public DbSet<IslandPosition> IslandPositions => Set<IslandPosition>();
+    public DbSet<Island> Island => Set<Island>();
+    public DbSet<IslandPosition> IslandPosition => Set<IslandPosition>();
     
-    public DbSet<BinStorage> BinStorages => Set<BinStorage>();
-    public DbSet<Bin> Bins => Set<Bin>();
+    public DbSet<BinStorage> BinStorage => Set<BinStorage>();
+    public DbSet<Bin> Bin => Set<Bin>();
     
-    public DbSet<StraightLine> StraightLines => Set<StraightLine>();
-    public DbSet<Aisle> Aisles => Set<Aisle>();
-    public DbSet<AisleSection> AisleSections => Set<AisleSection>();
-    public DbSet<AisleSectionPosition> AisleSectionPositions => Set<AisleSectionPosition>();
+    public DbSet<StraightLine> StraightLine => Set<StraightLine>();
+    public DbSet<Aisle> Aisle => Set<Aisle>();
+    public DbSet<AisleSection> AisleSection => Set<AisleSection>();
+    public DbSet<AisleSectionPosition> AisleSectionPosition => Set<AisleSectionPosition>();
     
-    public DbSet<Role> Roles => Set<Role>();
-    public DbSet<Employee> Employees => Set<Employee>();
-    public DbSet<Customer> Customers => Set<Customer>();
-    public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<Role> Role => Set<Role>();
+    public DbSet<Employee> Employee => Set<Employee>();
+    public DbSet<Customer> Customer => Set<Customer>();
+    public DbSet<Supplier> Supplier => Set<Supplier>();
 
-    public DbSet<InventoryMovement> InventoryMovements => Set<InventoryMovement>();
-    public DbSet<ItemLocation> ProductLocations => Set<ItemLocation>();
-    public DbSet<Item> ItemStocks => Set<Item>();
+    public DbSet<InventoryMovement> InventoryMovement => Set<InventoryMovement>();
+    public DbSet<ItemLocation> ItemLocation => Set<ItemLocation>();
+    public DbSet<Item> Item => Set<Item>();
 
-    public DbSet<Invoice> Invoices => Set<Invoice>();
-    public DbSet<Order> Orders => Set<Order>();
-    public DbSet<OrderProduct> OrderProducts => Set<OrderProduct>();
-    public DbSet<Product> Products => Set<Product>();
-    public DbSet<ProductCategory> ProductCategories => Set<ProductCategory>();
+    public DbSet<Invoice> Invoice => Set<Invoice>();
+    public DbSet<Order> Order => Set<Order>();
+    public DbSet<OrderProduct> OrderProduct => Set<OrderProduct>();
+    public DbSet<Product> Product => Set<Product>();
+    public DbSet<ProductCategory> ProductCategory => Set<ProductCategory>();
     
     
 }

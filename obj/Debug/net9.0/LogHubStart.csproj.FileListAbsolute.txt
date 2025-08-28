@@ -304,3 +304,8 @@ I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\runtimes\win-arm64\native
 I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
 I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
+I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\Npgsql.dll
+I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
+I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+I:\Coding\Projects\LogHub\LogHubStart\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll

@@ -1,9 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace LogHubStart.DTOs;
-
-
-// DTOs/CreateWarehouseDto.cs
 public class CreateWarehouseDTO
 {
     [Required(ErrorMessage = "Warehouse name is required")]

@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class AisleSectionPositionController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<AisleSectionPosition>> GetAisleSections()
     {
@@ -43,7 +43,9 @@ public class AisleSectionPositionController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<AisleSection>> PostAisleSection(AisleSectionPosition aisleSectionPosition)
+    public async Task<ActionResult<AisleSection>> PostAisleSection(
+        AisleSectionPosition aisleSectionPosition
+    )
     {
         if (aisleSectionPosition is null)
         {
@@ -57,13 +59,16 @@ public class AisleSectionPositionController : ControllerBase
             PositionCapacity = aisleSectionPosition.PositionCapacity,
             Height = aisleSectionPosition.Height,
             Width = aisleSectionPosition.Width,
-            Length = aisleSectionPosition.Length
+            Length = aisleSectionPosition.Length,
         };
 
         await _context.AisleSectionPosition.AddAsync(asp);
         await _context.SaveChangesAsync();
-        
-        return CreatedAtAction(nameof(GetAisleSection), new { id = aisleSectionPosition.AisleSectionPositionId });
+
+        return CreatedAtAction(
+            nameof(GetAisleSection),
+            new { id = aisleSectionPosition.AisleSectionPositionId }
+        );
     }
 
     [HttpPut("{id}")]
@@ -75,9 +80,9 @@ public class AisleSectionPositionController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateAisleSection).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -104,19 +109,20 @@ public class AisleSectionPositionController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var aisleSectionPosition = await _context.AisleSectionPosition.FindAsync(id);
         _context.AisleSectionPosition.Remove(aisleSectionPosition);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool AisleSectionPositionExists(int id)
     {
-        var doesAisleSectionPositionExist = _context.AisleSectionPosition
-            .Any(e => e.AisleSectionPositionId == id);
+        var doesAisleSectionPositionExist = _context.AisleSectionPosition.Any(e =>
+            e.AisleSectionPositionId == id
+        );
         return doesAisleSectionPositionExist;
     }
 }

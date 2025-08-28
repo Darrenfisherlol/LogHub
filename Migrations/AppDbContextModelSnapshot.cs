@@ -42,7 +42,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("StraightLineId");
 
-                    b.ToTable("Aisles");
+                    b.ToTable("Aisle");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.AisleSection", b =>
@@ -65,7 +65,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("AisleId");
 
-                    b.ToTable("AisleSections");
+                    b.ToTable("AisleSection");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.AisleSectionPosition", b =>
@@ -95,7 +95,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("AisleSectionId");
 
-                    b.ToTable("AisleSectionPositions");
+                    b.ToTable("AisleSectionPosition");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Bin", b =>
@@ -125,7 +125,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("BinStorageId");
 
-                    b.ToTable("Bins");
+                    b.ToTable("Bin");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.BinStorage", b =>
@@ -148,7 +148,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("WarehouseSectionsId");
 
-                    b.ToTable("BinStorages");
+                    b.ToTable("BinStorage");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Customer", b =>
@@ -176,7 +176,7 @@ namespace LogHubStart.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Employee", b =>
@@ -213,7 +213,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.InventoryMovement", b =>
@@ -254,7 +254,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("ToProductLocationId");
 
-                    b.ToTable("InventoryMovements");
+                    b.ToTable("InventoryMovement");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Invoice", b =>
@@ -286,7 +286,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Invoices");
+                    b.ToTable("Invoice");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Island", b =>
@@ -304,7 +304,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("WarehouseSectionsId");
 
-                    b.ToTable("Islands");
+                    b.ToTable("Island");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.IslandPosition", b =>
@@ -334,7 +334,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("IslandId");
 
-                    b.ToTable("IslandPositions");
+                    b.ToTable("IslandPosition");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Item", b =>
@@ -369,7 +369,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ItemStocks");
+                    b.ToTable("ItemStock");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.ItemLocation", b =>
@@ -397,7 +397,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("PositionId");
 
-                    b.ToTable("ProductLocations");
+                    b.ToTable("ProductLocation");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Order", b =>
@@ -427,7 +427,7 @@ namespace LogHubStart.Migrations
                     b.HasIndex("InvoiceId")
                         .IsUnique();
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.OrderProduct", b =>
@@ -448,7 +448,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderProducts");
+                    b.ToTable("OrderProduct");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Product", b =>
@@ -481,7 +481,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.ProductCategory", b =>
@@ -502,7 +502,7 @@ namespace LogHubStart.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategorie");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Role", b =>
@@ -524,7 +524,7 @@ namespace LogHubStart.Migrations
 
                     b.HasKey("RoleId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.StraightLine", b =>
@@ -542,7 +542,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("WarehouseSectionId");
 
-                    b.ToTable("StraightLines");
+                    b.ToTable("StraightLine");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Supplier", b =>
@@ -567,7 +567,7 @@ namespace LogHubStart.Migrations
 
                     b.HasKey("SupplierId");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Supplier");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Warehouse", b =>
@@ -634,7 +634,7 @@ namespace LogHubStart.Migrations
 
                     b.HasKey("WarehouseId");
 
-                    b.ToTable("Warehouses");
+                    b.ToTable("Warehouse");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.WarehouseSection", b =>
@@ -657,7 +657,7 @@ namespace LogHubStart.Migrations
 
                     b.HasIndex("WarehouseId");
 
-                    b.ToTable("WarehouseSections");
+                    b.ToTable("WarehouseSection");
                 });
 
             modelBuilder.Entity("LogHubStart.Models.Aisle", b =>

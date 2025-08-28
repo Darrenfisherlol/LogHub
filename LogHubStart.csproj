@@ -22,13 +22,15 @@
     <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.3" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.4.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Feature\Order\" />
-    <Folder Include="Feature\Product\" />
-    <Folder Include="Feature\User\" />
-    <Folder Include="Feature\Warehouse\" />
+    <Folder Include="Frontend\my-react-router-app\app\Feature\BinStorage\" />
+    <Folder Include="Frontend\my-react-router-app\app\Feature\Bin\" />
+    <Folder Include="Frontend\my-react-router-app\app\Feature\WarehouseSection\" />
+    <Folder Include="Frontend\my-react-router-app\app\Feature\Warehouse\Hooks\" />
+    <Folder Include="ServiceLogic\" />
   </ItemGroup>
 
 </Project>

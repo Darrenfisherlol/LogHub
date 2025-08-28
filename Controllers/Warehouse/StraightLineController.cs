@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
 using LogHubStart.Data;
 using LogHubStart.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogHubStart.Controllers;
@@ -19,7 +19,7 @@ public class StraightLineController : ControllerBase
     //
     // RESTCRUD
     //
-    
+
     [HttpGet]
     public async Task<IEnumerable<StraightLine>> GetStraightLines()
     {
@@ -49,16 +49,16 @@ public class StraightLineController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         StraightLine straightlineAdd = new StraightLine
         {
             WarehouseSectionId = straightLine.WarehouseSectionId,
-            WarehouseSection = straightLine.WarehouseSection
+            WarehouseSection = straightLine.WarehouseSection,
         };
 
         await _context.StraightLine.AddAsync(straightlineAdd);
         await _context.SaveChangesAsync();
-        
+
         return CreatedAtAction(nameof(GetStraightLine), new { id = straightLine.StraightLineID });
     }
 
@@ -71,9 +71,9 @@ public class StraightLineController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         _context.Entry(updateStraightLine).State = EntityState.Modified;
-        
+
         try
         {
             await _context.SaveChangesAsync();
@@ -100,19 +100,18 @@ public class StraightLineController : ControllerBase
         {
             return NotFound();
         }
-        
+
         var straightLine = await _context.StraightLine.FindAsync(id);
         _context.StraightLine.Remove(straightLine);
         await _context.SaveChangesAsync();
-        
+
         return NoContent();
     }
-    
+
     // Logic
     public bool StraightLineExists(int id)
     {
-        var doesStraightLineExist = _context.StraightLine
-            .Any(e => e.StraightLineID == id);
+        var doesStraightLineExist = _context.StraightLine.Any(e => e.StraightLineID == id);
         return doesStraightLineExist;
     }
 }

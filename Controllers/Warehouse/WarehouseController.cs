@@ -1,4 +1,5 @@
 using LogHubStart.Data;
+using LogHubStart.DTOs;
 using LogHubStart.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,15 @@ public class WarehousesController : ControllerBase
     {
         _context = context;
     }
-
-    //
-    // RESTCRUD
-    //
-
+    
     [HttpGet]
     public async Task<IEnumerable<Warehouse>> GetWarehouses()
     {
+        //
+        // Does the user have auth
+        // Limit per linq ~ how many get pushed to frontend ~ what if 100000 warehouses
+        //
+
         var warehouses = await _context.Warehouse.ToListAsync();
         return warehouses;
     }
@@ -30,6 +32,10 @@ public class WarehousesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Warehouse>> GetWarehouse(int id)
     {
+        //
+        // Does the user have auth
+        //
+        
         var warehouse = await _context.Warehouse.FindAsync(id);
 
         if (warehouse == null)
@@ -41,85 +47,101 @@ public class WarehousesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Warehouse>> PostWarehouse(Warehouse warehouse)
+    public async Task<ActionResult> CreateWarehouse([FromBody] CreateWarehouseDTO warehouseDto)
     {
-        if (warehouse is null)
+        //
+        // does employee have permission
+        // is the address a real address 
+        //
+        
+        if (warehouseDto is null)
         {
             return BadRequest();
         }
-
-        Warehouse addWarehouse = new Warehouse
+        
+        var warehouse = new Warehouse
         {
-            WarehouseName = warehouse.WarehouseName,
-            Address = warehouse.Address,
-            State = warehouse.State,
-            Country = warehouse.Country,
-            ZipCode = warehouse.ZipCode,
-            OwnerName = warehouse.OwnerName,
-            Phone = warehouse.Phone,
-            Email = warehouse.Email,
-            CreatedBy = warehouse.CreatedBy,
-            CreatedDate = warehouse.CreatedDate,
-            UpdatedBy = warehouse.UpdatedBy,
-            UpdateDate = warehouse.UpdateDate,
+            WarehouseName = warehouseDto.WarehouseName,
+            Address = warehouseDto.Address,
+            State = warehouseDto.State,
+            Country = warehouseDto.Country,
+            ZipCode = warehouseDto.ZipCode,
+            OwnerName = warehouseDto.OwnerName,
+            Phone = warehouseDto.Phone,
+            Email = warehouseDto.Email,
+            // get from Get from JWT/User
+            // CreatedBy = GetEmployeeId(), 
+            CreatedBy = 1, 
+            CreatedDate = DateTime.UtcNow,
+            // get from Get from JWT/User
+            // UpdatedBy = GetEmployeeId(), 
+            UpdatedBy = 1,
+            UpdateDate = DateTime.UtcNow
+            
         };
-
-        _context.Warehouse.AddAsync(addWarehouse);
+            
+        await _context.Warehouse.AddAsync(warehouse);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetWarehouse), new { id = warehouse.WarehouseId });
     }
 
     [HttpPut("{id}")]
-    // overposting attacks
-    // dto
-    public async Task<IActionResult> PutWarehouse(int id, Warehouse updateWarehouse)
+    public async Task<IActionResult> PutWarehouse(int id, [FromBody] UpdateWarehouseDTO dto)
     {
-        if (id != updateWarehouse.WarehouseId)
-        {
-            return BadRequest();
-        }
+        
+        //
+        // Does user have auth to update a warehouse
+        // Validate data from DTO
+        //
+        
+        var warehouseExisting = await _context.Warehouse.FindAsync(dto.WarehouseId);
 
-        _context.Entry(updateWarehouse).State = EntityState.Modified;
-
-        try
+        if (warehouseExisting == null)
         {
-            await _context.SaveChangesAsync();
+            return BadRequest("ID in URL and body do not match.");
         }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!WarehouseExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        
+        warehouseExisting.WarehouseName = dto.WarehouseName;
+        warehouseExisting.Address = dto.Address;
+        warehouseExisting.State = dto.State;
+        warehouseExisting.Country = dto.Country;
+        warehouseExisting.ZipCode = dto.ZipCode;
+        warehouseExisting.OwnerName = dto.OwnerName;
+        warehouseExisting.Phone = dto.Phone;
+        warehouseExisting.Email = dto.Email;
+        // warehouseExisting.UpdatedBy = GetEmployeeId();
+        warehouseExisting.UpdatedBy = 1;
+        warehouseExisting.UpdateDate = DateTime.UtcNow;
+        
+        await _context.SaveChangesAsync();
+        
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteWarehouse(int id)
     {
-        var warehouseExists = WarehouseExists(id);
-        if (!warehouseExists)
+        //
+        // user input id is not null
+        // user permission to delete that warehouse
+        //
+        
+        var warehouse = await _context.Warehouse.FindAsync(id);
+        if (warehouse == null)
         {
             return NotFound();
         }
+        
+        var warehouseSection = await _context.WarehouseSection.AnyAsync(x => x.WarehouseId == id);
+        if (warehouseSection)
+        {
+            return BadRequest("Cannot delete a Warehouse since it has Warehouse section(s) exists");
+        }
 
-        var warehouse = await _context.Warehouse.FindAsync(id);
         _context.Warehouse.Remove(warehouse);
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    // Logic
-    public bool WarehouseExists(int id)
-    {
-        var doesWarehouseExist = _context.Warehouse.Any(e => e.WarehouseId == id);
-        return doesWarehouseExist;
     }
 }

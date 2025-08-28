@@ -11,7 +11,7 @@ public class Item
     [ForeignKey("ItemLocation")]
     public int ItemLocationId { get; set; }
     public ItemLocation ItemLocation { get; set; }
-    
+
     [ForeignKey("Product")]
     [Required]
     public int ProductId { get; set; }

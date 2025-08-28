@@ -21,6 +21,4 @@ public class ItemLocation
     public AisleSectionPosition AisleSectionPosition { get; set; }
 
     public ICollection<Item> Items { get; set; }
-    
-
 }

@@ -9,22 +9,22 @@ public class AisleSectionPosition
 {
     [Key]
     public int AisleSectionPositionId { get; set; }
-    
+
     [ForeignKey("AisleSectionPosition")]
     [Required]
     public int AisleSectionId { get; set; }
-    
+
     public AisleSection AisleSection { get; set; }
-    
+
     [Required]
     public double PositionCapacity { get; set; }
-    
+
     [Required]
     public double Height { get; set; }
-    
+
     [Required]
     public double Width { get; set; }
-    
+
     [Required]
     public double Length { get; set; }
 }

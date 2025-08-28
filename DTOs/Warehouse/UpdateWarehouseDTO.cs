@@ -2,8 +2,6 @@
 
 namespace LogHubStart.DTOs;
 
-
-
 public class UpdateWarehouseDTO
 {
     [Required]
