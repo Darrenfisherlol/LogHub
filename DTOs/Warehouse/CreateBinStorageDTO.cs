@@ -1,0 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace LogHubStart.DTOs;
+
+public class CreateBinStorageDTO
+{
+    [Required(ErrorMessage = "Warehouse section ID is required")]
+    public int WarehouseSectionsId { get; set; }
+    
+    [Required(ErrorMessage = "Row is required")]
+    [StringLength(50, ErrorMessage = "Row cannot exceed 50 characters")]
+    public string Row { get; set; }
+}

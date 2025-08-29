@@ -1,4 +1,6 @@
 using LogHubStart.Data;
+using LogHubStart.DTOs;
+
 using LogHubStart.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,75 +45,66 @@ public class IslandController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<Island>> PostIsland(Island island)
+    public async Task<ActionResult<Island>> PostIsland([FromBody] CreateIslandDTO dto)
     {
-        if (island is null)
+        if (dto is null)
         {
-            return BadRequest();
+            return BadRequest("dto is null");
         }
 
-        Island islandUpdate = new Island
+        var islandExists = await _context.Island.AnyAsync(x => x.IslandId == dto.WarehouseSectionsId);
+        if (!islandExists)
         {
-            WarehouseSectionsId = island.WarehouseSectionsId,
-            WarehouseSection = island.WarehouseSection,
+            return BadRequest("Warehouse section does not exist");
+        }
+
+        Island newIsland = new Island
+        {
+            WarehouseSectionsId = dto.WarehouseSectionsId,
         };
 
-        await _context.AddAsync(islandUpdate);
+        await _context.AddAsync(newIsland);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetIsland), new { id = island.IslandId });
+        return CreatedAtAction(nameof(GetIsland), new { id = newIsland.IslandId });
     }
 
     [HttpPut("{id}")]
     // overposting attacks
     // dto
-    public async Task<IActionResult> PutIsland(int id, Island updateIsland)
+    public async Task<IActionResult> PutIsland(int id, [FromBody] UpdateIslandDTO dto)
     {
-        if (id != updateIsland.IslandId)
+        var island = await _context.Island.FindAsync(id);
+        if (island == null)
         {
-            return BadRequest();
+            return NotFound($"Island with ID {id} not found");
         }
 
-        _context.Entry(updateIsland).State = EntityState.Modified;
+        var sectionExists = await _context.Island.AnyAsync(x => x.IslandId == dto.IslandId);
+        if (!sectionExists)
+        {
+            return BadRequest("Island does not exist");
+        }
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!IslandExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        island.WarehouseSectionsId = dto.WarehouseSectionsId;
+        
+        await _context.SaveChangesAsync();
+
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteIsland(int id)
     {
-        var islandExists = IslandExists(id);
-        if (!islandExists)
+        var island = await _context.Island.FindAsync(id);
+        if (island == null)
         {
-            return NotFound();
+            return NotFound($"Island with ID {id} not found");
         }
 
-        var island = await _context.Island.FindAsync(id);
         _context.Island.Remove(island);
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    // Logic
-    public bool IslandExists(int id)
-    {
-        var doesIslandExist = _context.Island.Any(e => e.IslandId == id);
-        return doesIslandExist;
     }
 }

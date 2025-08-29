@@ -1,4 +1,5 @@
 using LogHubStart.Data;
+using LogHubStart.DTOs;
 using LogHubStart.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,76 +44,70 @@ public class BinStorageController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<BinStorage>> PostBinStorage(BinStorage binStorage)
+    public async Task<ActionResult<BinStorage>> PostBinStorage([FromBody] CreateBinStorageDTO dto)
     {
-        if (binStorage is null)
+        if (dto is null)
         {
             return BadRequest();
         }
 
-        BinStorage binStorageUpdate = new BinStorage
+        var sectionExists = await _context.WarehouseSection.AnyAsync(ws => ws.WarehouseSectionId == dto.WarehouseSectionsId);
+        if (!sectionExists)
         {
-            WarehouseSectionsId = binStorage.WarehouseSectionsId,
-            WarehouseSection = binStorage.WarehouseSection,
-            Row = binStorage.Row,
+            return BadRequest("Specified warehouse section does not exist");
+        }
+
+        BinStorage newBinStorage = new BinStorage
+        {
+            WarehouseSectionsId = dto.WarehouseSectionsId,
+            Row = dto.Row,
         };
 
-        await _context.BinStorage.AddAsync(binStorageUpdate);
+        await _context.BinStorage.AddAsync(newBinStorage);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetBinStorage), new { id = binStorage.BinStorageId });
+        return CreatedAtAction(nameof(GetBinStorage), new { id = newBinStorage.BinStorageId });
     }
 
     [HttpPut("{id}")]
     // overposting attacks
     // dto
-    public async Task<IActionResult> PutBinStorage(int id, BinStorage updateBinStorage)
+    public async Task<IActionResult> PutBinStorage(int id, [FromBody] UpdateBinStorageDTO dto)
     {
-        if (id != updateBinStorage.BinStorageId)
+        var binStorage = await _context.BinStorage.FindAsync(dto.BinStorageId);
+        if (binStorage == null)
         {
-            return BadRequest();
+            return NotFound($"Bin storage with ID {dto.BinStorageId} not found");
         }
 
-        _context.Entry(updateBinStorage).State = EntityState.Modified;
+        var binStorageExists = await _context.BinStorage.AnyAsync(x => x.BinStorageId == dto.BinStorageId);
+        if (!binStorageExists)
+        {
+            return BadRequest("Bin storage does not exist");
+        }
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!BinStorageExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        binStorage.WarehouseSectionsId = dto.WarehouseSectionsId;
+        binStorage.Row = dto.Row;
+
+        await _context.SaveChangesAsync();
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBinStorage(int id)
     {
-        var binStorageExists = BinStorageExists(id);
-        if (!binStorageExists)
-        {
-            return NotFound();
-        }
 
         var binStorage = await _context.BinStorage.FindAsync(id);
+        if (binStorage == null)
+        {
+            return NotFound($"Bin storage with ID {id} not found");
+        }
+
+        // add parent check
+
         _context.BinStorage.Remove(binStorage);
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    // Logic
-    public bool BinStorageExists(int id)
-    {
-        var doesBinStorageExist = _context.BinStorage.Any(e => e.BinStorageId == id);
-        return doesBinStorageExist;
     }
 }

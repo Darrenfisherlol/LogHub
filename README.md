@@ -26,3 +26,15 @@ Speed up your labeling, packaging, and shipping workflows — all in one place.
 - **Database**: (PostgreSQL)
 
 ---
+
+## TO DO
+
+- Basic all backend - models, controller, data transfer objects
+- Basic all frontend - TSX / react
+- Basic all Tests - unit test, integration, & end-to-end
+- Isolate controller & services / data access
+- Standard error handling
+- Better backend + frontend
+- Arch improvement - CQRS (command query response) / better DDD / better clean code practices
+- Impress future boss and tech recruiter
+- Did you read this far? hire me ~ msg on linkedin

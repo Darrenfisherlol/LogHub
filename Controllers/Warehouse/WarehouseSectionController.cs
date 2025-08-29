@@ -54,7 +54,14 @@ public class WarehouseSectionController : ControllerBase
     {
         if (warehouseSectionDto is null)
         {
-            return BadRequest();
+            return BadRequest("CreateWarehouseSectionDTO is null");
+        }
+
+        var warehouseExists = await _context.Warehouse.AnyAsync(x => x.WarehouseId == warehouseSectionDto.WarehouseId);
+        if (!warehouseExists)
+        {
+            // throw NotFoundException ~ future
+            return BadRequest("Associated Warehouse does not exist");
         }
 
         WarehouseSection newWarehouseSection = new WarehouseSection
@@ -84,6 +91,13 @@ public class WarehouseSectionController : ControllerBase
             return NotFound();
         }
         
+        var warehouseExists = await _context.WarehouseSection.AnyAsync(x => x.WarehouseSectionId == dto.WarehouseSectionId);
+        if (!warehouseExists)
+        {
+            // throw NotFoundException ~ future
+            return BadRequest("Associated Warehouse does not exist");
+        }
+
         warehouseSection.WarehouseId = dto.WarehouseId;
         warehouseSection.Desc = dto.Desc;
         

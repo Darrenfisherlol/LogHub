@@ -27,7 +27,7 @@ public class Warehouse
     public string OwnerName { get; set; }
 
     [Required, StringLength(25)]
-    public int Phone { get; set; }
+    public string Phone { get; set; }
 
     [Required, StringLength(250)]
     public string Email { get; set; }
@@ -36,15 +36,18 @@ public class Warehouse
     public int CreatedBy { get; set; }
 
     [Required]
-    [Column(TypeName = "DateTime")]
+    [Column(TypeName = "timestamp")]
     public DateTime CreatedDate { get; set; }
 
     [Required, StringLength(250)]
     public int UpdatedBy { get; set; }
 
     [Required]
-    [Column(TypeName = "DateTime")]
+    [Column(TypeName = "timestamp")]
     public DateTime UpdateDate { get; set; }
 
     public ICollection<WarehouseSection> WarehouseSections { get; set; }
 }
+
+
+

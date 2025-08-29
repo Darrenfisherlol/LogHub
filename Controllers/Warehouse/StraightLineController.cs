@@ -1,4 +1,5 @@
 using LogHubStart.Data;
+using LogHubStart.DTOs;
 using LogHubStart.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,75 +44,72 @@ public class StraightLineController : ControllerBase
     [HttpPost]
     // overposting attacks
     // dto
-    public async Task<ActionResult<StraightLine>> PostStraightLine(StraightLine straightLine)
+    public async Task<ActionResult<StraightLine>> PostStraightLine([FromBody] CreateStraightLineDTO dto)
     {
-        if (straightLine is null)
+        if (dto is null)
         {
             return BadRequest();
         }
 
-        StraightLine straightlineAdd = new StraightLine
+        var sectionExists = await _context.WarehouseSection.AnyAsync(x => x.WarehouseSectionId == dto.WarehouseSectionId);
+        
+        if (!sectionExists)
         {
-            WarehouseSectionId = straightLine.WarehouseSectionId,
-            WarehouseSection = straightLine.WarehouseSection,
+            return BadRequest("Warehouse section does not exist");
+        }
+
+        StraightLine newStraightLine = new StraightLine
+        {
+            WarehouseSectionId = dto.WarehouseSectionId        
         };
 
-        await _context.StraightLine.AddAsync(straightlineAdd);
+        await _context.StraightLine.AddAsync(newStraightLine);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetStraightLine), new { id = straightLine.StraightLineID });
+        return CreatedAtAction(nameof(GetStraightLine), new { id = newStraightLine.StraightLineID });
     }
 
     [HttpPut("{id}")]
     // overposting attacks
-    // dto
-    public async Task<IActionResult> PutStraightLine(int id, StraightLine updateStraightLine)
+    // use a dto
+    public async Task<IActionResult> PutStraightLine([FromBody] UpdateStraightLineDTO dto)
     {
-        if (id != updateStraightLine.StraightLineID)
+        
+        var straightLine = await _context.StraightLine.FindAsync(dto.StraightLineID);
+        if (straightLine == null)
         {
-            return BadRequest();
+            // pass the id back on all controllers
+            return NotFound($"Straight line with ID {dto.StraightLineID} not found");
         }
 
-        _context.Entry(updateStraightLine).State = EntityState.Modified;
+        var straightLineExists = await _context.WarehouseSection.AnyAsync(x => x.WarehouseSectionId == dto.WarehouseSectionId);
+        if (!straightLineExists)
+        {
+            return BadRequest("StraightLine section does not exist");
+        }
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!StraightLineExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
+        // change data ~ avoid overposting by emphasizing what changes
+        straightLine.WarehouseSectionId = dto.WarehouseSectionId;
+        
+        await _context.SaveChangesAsync();
+
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteStraightLine(int id)
     {
-        var straightLineExists = StraightLineExists(id);
-        if (!straightLineExists)
+        var straightLine = await _context.StraightLine.FindAsync(id);
+        if (straightLine == null)
         {
-            return NotFound();
+            return NotFound($"Straight line with ID {id} not found");
         }
 
-        var straightLine = await _context.StraightLine.FindAsync(id);
+        // add parent check
+        
         _context.StraightLine.Remove(straightLine);
         await _context.SaveChangesAsync();
 
         return NoContent();
-    }
-
-    // Logic
-    public bool StraightLineExists(int id)
-    {
-        var doesStraightLineExist = _context.StraightLine.Any(e => e.StraightLineID == id);
-        return doesStraightLineExist;
     }
 }

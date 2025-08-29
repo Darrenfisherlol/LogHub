@@ -27,7 +27,7 @@ public class UpdateWarehouseDTO
     public string OwnerName { get; set; } 
 
     [Phone(ErrorMessage = "Invalid phone number format")]
-    public int Phone { get; set; }
+    public string Phone { get; set; }
 
     [EmailAddress(ErrorMessage = "Invalid email format")]
     public string Email { get; set; }
